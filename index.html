@@ -2,183 +2,764 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weaverly Express</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#fdf2f8',
-              500: '#ec4899',
-              600: '#db2777',
-              700: '#be185d',
-            }
-          }
-        }
-      }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Weaverly Express | 10-Min Local Delivery</title>
+  <style>
+    /* =========================================================
+       100% BUILT-IN CSS (NO EXTERNAL CDN NEEDED - NEVER FAILS)
+       ========================================================= */
+    :root {
+      --primary: #7c3aed;
+      --primary-dark: #5b21b6;
+      --primary-light: #f3e8ff;
+      --accent: #db2777;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
     }
-  </script>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 110px;
+      line-height: 1.4;
+    }
+
+    /* Header & Sticky Bars */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: linear-gradient(135deg, #4c1d95, #7c3aed);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 12px 16px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-badge {
+      background: #fde047;
+      color: #1e1b4b;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .brand-tagline {
+      font-size: 12px;
+      color: #e9d5ff;
+      margin-top: 2px;
+    }
+
+    .cart-top-btn {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cart-badge {
+      background: #fde047;
+      color: #1e1b4b;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    /* Location Banner */
+    .loc-bar {
+      background: #fff;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+
+    .loc-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .loc-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .dot-amber { background: var(--amber); box-shadow: 0 0 0 4px var(--amber-light); }
+    .dot-green { background: var(--green); box-shadow: 0 0 0 4px var(--green-light); }
+    .dot-red   { background: var(--red);   box-shadow: 0 0 0 4px var(--red-light); }
+
+    .gps-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .gps-btn:active { transform: scale(0.97); }
+
+    /* Search Bar */
+    .search-wrap {
+      margin-top: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 16px;
+    }
+
+    /* Minimum Order Progress Card */
+    .min-order-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .min-order-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.25s ease;
+    }
+
+    .progress-fill.complete {
+      background: var(--green);
+    }
+
+    /* Category Pills */
+    .cat-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .cat-scroll::-webkit-scrollbar { display: none; }
+
+    .cat-btn {
+      padding: 8px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 8px rgba(124, 58, 237, 0.25);
+    }
+
+    /* Section Heading */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .section-count {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (min-width: 600px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 820px) {
+      .product-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .discount-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--green);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 6px;
+      z-index: 2;
+    }
+
+    .img-box {
+      width: 100%;
+      height: 120px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .emoji-fallback {
+      font-size: 42px;
+      user-select: none;
+    }
+
+    .prod-unit {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      background: #f1f5f9;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .prod-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      min-height: 34px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prod-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .price-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-now {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .price-mrp {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .add-btn {
+      background: #fff;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .add-btn:active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .qty-box {
+      display: flex;
+      align-items: center;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+    }
+
+    .qty-num {
+      font-size: 12px;
+      font-weight: 800;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* Sticky Bottom Cart Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      z-index: 45;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    }
+
+    .bottom-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .checkout-main-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Modals & Cart Drawer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      z-index: 60;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .drawer-sheet {
+      background: #fff;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .drawer-header {
+      padding: 14px 16px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      background: #e2e8f0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .drawer-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-top: 12px;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .whatsapp-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .whatsapp-btn.enabled {
+      background: #16a34a;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+    .whatsapp-btn.disabled {
+      background: #e2e8f0;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* Location Welcome Prompt Card */
+    .gps-modal-card {
+      background: #fff;
+      width: 92%;
+      max-width: 400px;
+      border-radius: 20px;
+      padding: 22px 18px;
+      text-align: center;
+      margin: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-900 pb-28">
+<body>
 
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div>
-        <h1 class="text-xl font-black text-brand-600 tracking-tight" id="headerStoreName">Weaverly Express</h1>
-        <p class="text-xs text-gray-500 font-medium" id="headerStoreTagline">Ultra-Fast Local Dry Goods & Staples</p>
+  <!-- =========================================================
+       TOP HEADER & SEARCH
+       ========================================================= -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div>
+          <div class="brand-title">
+            <span id="uiStoreName">Weaverly Express</span>
+            <span class="brand-badge">1 KM ZONE</span>
+          </div>
+          <div class="brand-tagline" id="uiStoreTagline">Ultra-Fast Local Dry Goods & Staples</div>
+        </div>
+        <button type="button" class="cart-top-btn" onclick="openCartModal(true)">
+          <span>🛒 Cart</span>
+          <span class="cart-badge" id="topCartCount">0</span>
+        </button>
       </div>
-      <!-- Cart Icon & Counter -->
-      <button onclick="toggleCartDrawer(true)" class="relative p-2 bg-brand-50 text-brand-700 rounded-full hover:bg-brand-100 transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-        </svg>
-        <span id="headerCartCount" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-      </button>
-    </div>
 
-    <!-- Location Status Banner -->
-    <div id="locationBanner" class="bg-amber-50 border-t border-amber-200 px-4 py-2 text-xs flex items-center justify-between max-w-4xl mx-auto">
-      <div class="flex items-center space-x-2 truncate">
-        <span id="locStatusIcon" class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-        <span id="locStatusText" class="text-amber-800 font-medium">Checking delivery radius...</span>
+      <div class="search-wrap">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search rice, atta, dal, oil, spices..."
+          oninput="handleSearch(this.value)"
+        />
       </div>
-      <button id="btnRetryLoc" onclick="requestUserLocation()" class="text-xs bg-amber-600 text-white font-semibold px-2.5 py-1 rounded shadow-sm hover:bg-amber-700">
-        Enable GPS
-      </button>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-4xl mx-auto px-4 py-4 space-y-6">
-
-    <!-- Category Filter Bar -->
-    <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryContainer">
-      <button onclick="filterCategory('All')" class="category-pill active-category px-4 py-1.5 text-xs font-semibold rounded-full bg-brand-600 text-white whitespace-nowrap shadow-sm">
-        All Items
+  <!-- =========================================================
+       LIVE GPS STATUS BAR
+       ========================================================= -->
+  <div class="loc-bar">
+    <div class="loc-bar-inner">
+      <div class="loc-status">
+        <span id="locDot" class="dot dot-amber"></span>
+        <span id="locText">Location required (Max 1 km radius)</span>
+      </div>
+      <button type="button" id="locActionBtn" class="gps-btn" onclick="triggerGpsCheck()">
+        📍 Tap to Detect GPS
       </button>
     </div>
+  </div>
 
-    <!-- Minimum Order Status Alert -->
-    <div id="minOrderBanner" class="bg-brand-50 border border-brand-200 rounded-xl p-3 text-xs text-brand-800 flex justify-between items-center">
-      <span>Minimum order value for delivery is <strong>₹499</strong>.</span>
-      <span id="minOrderDiffText" class="font-bold text-brand-600">Add ₹499 more</span>
+  <!-- =========================================================
+       MAIN CONTENT AREA
+       ========================================================= -->
+  <main class="container">
+    <!-- Minimum Order Progress -->
+    <div class="min-order-card">
+      <div class="min-order-top">
+        <span id="minOrderHeadline">Add ₹499 more for Free Delivery</span>
+        <span id="minOrderNumbers">₹0 / ₹499</span>
+      </div>
+      <div class="progress-track">
+        <div id="minOrderBar" class="progress-fill"></div>
+      </div>
     </div>
 
-    <!-- Product Grid -->
-    <div>
-      <h2 class="text-base font-bold text-gray-800 mb-3" id="currentCategoryTitle">All Products</h2>
-      <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-        <!-- Products render here dynamically -->
+    <!-- Category Pills -->
+    <div id="categoryList" class="cat-scroll"></div>
+
+    <!-- Product Section Header -->
+    <div class="section-head">
+      <h2 class="section-title" id="sectionTitle">All Products</h2>
+      <span class="section-count" id="productCountText">0 items</span>
+    </div>
+
+    <!-- Product Cards Grid -->
+    <div id="productGrid" class="product-grid">
+      <div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: #64748b;">
+        Loading products...
       </div>
     </div>
   </main>
 
-  <!-- Sticky Bottom Checkout Bar -->
-  <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-3 z-30">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+  <!-- =========================================================
+       STICKY BOTTOM BAR
+       ========================================================= -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
       <div>
-        <div class="text-xs text-gray-500 font-medium">Cart Total</div>
-        <div class="text-lg font-black text-gray-900" id="bottomBarTotal">₹0</div>
+        <div style="font-size: 11px; color: var(--muted); font-weight: 700;" id="bottomItemCount">0 ITEMS IN CART</div>
+        <div style="font-size: 18px; font-weight: 900;" id="bottomTotalText">₹0</div>
       </div>
-      <button id="btnOpenCheckout" onclick="toggleCartDrawer(true)" class="flex-1 max-w-xs bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-sm transition-all flex items-center justify-center space-x-2">
-        <span>View Cart</span>
-        <span id="bottomBarBadge" class="bg-brand-800 text-xs px-2 py-0.5 rounded-full">0</span>
+      <button type="button" class="checkout-main-btn" onclick="openCartModal(true)">
+        <span>Proceed to Order</span>
+        <span>→</span>
       </button>
     </div>
   </div>
 
-  <!-- Cart & Checkout Slide-Over Drawer -->
-  <div id="cartModal" class="fixed inset-0 bg-black/60 z-50 hidden transition-opacity flex justify-end">
-    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
-      <!-- Drawer Header -->
-      <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-brand-50">
+  <!-- =========================================================
+       CART & WHATSAPP CHECKOUT DRAWER
+       ========================================================= -->
+  <div id="cartModal" class="modal-backdrop">
+    <div class="drawer-sheet">
+      <div class="drawer-header">
         <div>
-          <h3 class="font-black text-gray-900 text-base">Your Cart</h3>
-          <p class="text-xs text-gray-600" id="drawerStoreAddress">Store Hub: Yamuna Vihar</p>
+          <div style="font-size: 16px; font-weight: 900;">Your Order Basket</div>
+          <div style="font-size: 11px; color: var(--muted);" id="drawerStoreAddr">Store Hub</div>
         </div>
-        <button onclick="toggleCartDrawer(false)" class="p-1.5 text-gray-500 hover:text-gray-800 rounded-full">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+        <button type="button" class="close-btn" onclick="openCartModal(false)">✕</button>
       </div>
 
-      <!-- Cart Items List -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-3" id="cartItemList">
-        <!-- Cart items injected here -->
-      </div>
+      <div class="drawer-body">
+        <!-- Cart Items -->
+        <div id="cartItemsContainer"></div>
 
-      <!-- Customer Checkout Details -->
-      <div class="p-4 border-t border-gray-200 bg-gray-50 space-y-3">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500">Delivery Information</h4>
-        <input type="text" id="custName" placeholder="Your Full Name *" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
-        <input type="text" id="custAddress" placeholder="Complete House / Flat Address *" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
-        <input type="text" id="custNotes" placeholder="Landmark or delivery note (optional)" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
+        <!-- Customer Delivery Form -->
+        <div class="form-group">
+          <label class="form-label">Delivery Details (Within 1 km of Store)</label>
+          <input type="text" id="custName" class="form-input" placeholder="Your Full Name *" />
+          <input type="tel" id="custPhone" class="form-input" placeholder="Your 10-Digit Mobile Number *" />
+          <input type="text" id="custAddress" class="form-input" placeholder="House / Flat No., Street, Block *" />
+          <input type="text" id="custLandmark" class="form-input" placeholder="Nearby Landmark (Optional)" />
+        </div>
 
-        <!-- Bill Breakdown -->
-        <div class="space-y-1 pt-2 border-t border-gray-200 text-xs text-gray-600">
-          <div class="flex justify-between"><span>Subtotal</span><span id="billSubtotal">₹0</span></div>
-          <div class="flex justify-between"><span>Delivery Charge (&lt; 1 km)</span><span class="text-emerald-600 font-semibold">FREE</span></div>
-          <div class="flex justify-between font-bold text-gray-900 text-sm pt-1 border-t border-gray-200">
-            <span>To Pay</span><span id="billTotal">₹0</span>
+        <!-- Bill Summary -->
+        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: 8px; font-size: 13px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Items Total</span>
+            <strong id="billSubtotal">₹0</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px; color: var(--green);">
+            <span>Total Savings on MRP</span>
+            <strong id="billSavings">-₹0</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <span>1 km Express Delivery</span>
+            <strong style="color: var(--green);">FREE</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:900; border-top:1px solid #e2e8f0; padding-top:6px;">
+            <span>Grand Total</span>
+            <span id="billGrandTotal">₹0</span>
           </div>
         </div>
 
-        <!-- WhatsApp Checkout Action Button -->
-        <button id="btnWhatsAppOrder" onclick="processWhatsAppCheckout()" disabled class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-300 text-gray-500 cursor-not-allowed shadow transition-all flex items-center justify-center space-x-2">
-          <span>1-Click Order on WhatsApp</span>
+        <!-- Location Check inside Cart -->
+        <div id="cartLocNotice" style="margin-top: 10px; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; text-align: center;"></div>
+
+        <!-- 1-Click WhatsApp Button -->
+        <button type="button" id="whatsappSubmitBtn" class="whatsapp-btn disabled" onclick="submitOrderToWhatsApp()">
+          1-Click Order on WhatsApp
         </button>
-        <p id="orderWarningText" class="text-center text-[11px] text-amber-700 font-medium"></p>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
-  <script>
-    // ==========================================
-    // 1. STORE & PRODUCT CONFIGURATION
-    // ==========================================
-    const STORE_CONFIG = Object.freeze({
-      name: "Weaverly Express",
-      tagline: "Ultra-Fast Local Dry Goods & Staples",
-      phone: "918076433724", // <-- Put your WhatsApp Number here (format: CountryCode + Number, no + sign)
-      minOrderValue: 499,
-      maxDeliveryRadiusKm: 1.0,
-      storeLat: 28.6979998,     // <-- Put your Store Latitude here
-      storeLng: 77.2694341,     // <-- Put your Store Longitude here
-      address: "Yamuna Vihar, Delhi 110053",
-      orderPrefix: "WV"
-    });
+  <!-- =========================================================
+       INITIAL LOCATION PROMPT MODAL (FORCES BROWSER GPS POPUP)
+       ========================================================= -->
+  <div id="gpsWelcomeModal" class="modal-backdrop" style="align-items: center;">
+    <div class="gps-modal-card">
+      <div style="font-size: 40px; margin-bottom: 8px;">📍</div>
+      <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">Verify 1 km Delivery Zone</h3>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">
+        We deliver ultra-fast within <strong>1.0 km</strong> of our store hub (<span id="modalStoreAddr">Yamuna Vihar</span>) on orders above <strong>₹499</strong>.
+      </p>
+      <button
+        type="button"
+        onclick="acceptGpsModal()"
+        style="width:100%; background:var(--primary); color:#fff; border:none; padding:13px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:8px;"
+      >
+        📍 Allow Live GPS Location
+      </button>
+      <button
+        type="button"
+        onclick="closeGpsModal()"
+        style="width:100%; background:#f1f5f9; color:var(--muted); border:none; padding:10px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;"
+      >
+        Browse Products First
+      </button>
+    </div>
+  </div>
 
-    const PRODUCTS = [
-      { id: 1, name: "Premium Basmati Rice", category: "Grains", price: 180, mrp: 220, unit: "1 kg", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&q=80" },
-      { id: 2, name: "Chakki Fresh Atta", category: "Grains", price: 210, mrp: 250, unit: "5 kg", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&q=80" },
-      { id: 3, name: "Toor Dal (Arhar)", category: "Pulses", price: 165, mrp: 195, unit: "1 kg", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=80" },
-      { id: 4, name: "Moong Dal Washed", category: "Pulses", price: 140, mrp: 170, unit: "1 kg", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&q=80" },
-      { id: 5, name: "Cold Pressed Mustard Oil", category: "Oils", price: 190, mrp: 230, unit: "1 Litre", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&q=80" },
-      { id: 6, name: "Desi Cow Ghee", category: "Dairy & Ghee", price: 340, mrp: 390, unit: "500 ml", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&q=80" },
-      { id: 7, name: "Tata Salt Vacuum Evaporated", category: "Spices", price: 28, mrp: 30, unit: "1 kg", image: "https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?w=300&q=80" },
-      { id: 8, name: "Kashmiri Red Chilli Powder", category: "Spices", price: 85, mrp: 110, unit: "200 g", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&q=80" },
-      { id: 9, name: "Organic Jaggery Powder", category: "Dry Goods", price: 75, mrp: 95, unit: "500 g", image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=300&q=80" }
-    ];
-
-    // ==========================================
-    // 2. APP STATE
-    // ==========================================
-    let cart = {}; // { productId: quantity }
-    let activeCategory = "All";
-    let userLocation = {
-      lat: null,
-      lng: null,
-      distanceKm: null,
-      isVerified: false,
-      errorMsg: null
-    };
-
-    // ==========================================
+  <!-- ========================================
     // 3. HAVERSINE DISTANCE CALCULATION
     // ==========================================
     function calculateDistance(lat1, lon1, lat2, lon2) {
