@@ -1,188 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Weaverly Express | 12-Min Instant Local Store</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-
-    <script>
-
-        const STORE_CONFIG = Object.freeze({
-  name: "Weaverly Express",
-  tagline: "Ultra-Fast Local Dry Goods & Staples",
-  phone: "918076433724",              // <--- 1. CHANGE THIS (WhatsApp Number)
-  currency: "₹",
-  minOrderValue: 499,
-  maxDeliveryRadiusKm: 1.0,
-  storeLat: 28.6979998,                  // <--- 2. CHANGE THIS (Store Latitude)
-  storeLng: 77.2694341,                  // <--- 3. CHANGE THIS (Store Longitude)
-  address: "Block C, Yamuna Vihar, Delhi 110053", // <--- Display address
-  orderPrefix: "WV"
-});
-
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        zepto: {
-                            950: '#1c0636',
-                            900: '#2b0952',
-                            800: '#3c0d73',
-                            700: '#501496',
-                            600: '#6b21a8',
-                            pink: '#ff3269',
-                            pinkHover: '#e61e54',
-                            pinkLight: '#fff0f4',
-                            mint: '#059669',
-                            gold: '#f59e0b'
-                        }
-                    }
-                }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weaverly Express</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf2f8',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
             }
+          }
         }
-    </script>
-
-    <style>
-        /* Hide scrollbars for horizontal pill bars while keeping scrollability */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        /* Subtle pulse for 12-min lightning badge */
-        @keyframes pulseGlow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
-        .bolt-pulse {
-            animation: pulseGlow 2s infinite ease-in-out;
-        }
-        /* Smooth Drawer & Modal Transitions */
-        .drawer-backdrop {
-            background-color: rgba(17, 7, 34, 0.65);
-            backdrop-filter: blur(4px);
-        }
-        /* Custom subtle pattern for header */
-        .zepto-header-bg {
-            background: linear-gradient(135deg, #220641 0%, #3b0d71 55%, #4d1291 100%);
-        }
-        .product-card-shadow {
-            box-shadow: 0 2px 10px -2px rgba(43, 9, 82, 0.07), 0 1px 3px -1px rgba(0, 0, 0, 0.05);
-        }
-        .product-card-shadow:hover {
-            box-shadow: 0 10px 22px -4px rgba(59, 13, 113, 0.14);
-        }
-    </style>
+      }
+    }
+  </script>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-zepto-pink selection:text-white pb-36">
+<body class="bg-gray-50 text-gray-900 pb-28">
 
-    <!-- ============================================================================ -->
-    <!-- TOP STICKY ZEPTO-STYLE HEADER + STRICT LIVE 1KM GPS BAR + SEARCH             -->
-    <!-- ============================================================================ -->
-    <header class="sticky top-0 z-30 zepto-header-bg text-white shadow-lg">
-        <!-- Main Header Container -->
-        <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-3">
-            <div class="flex items-center justify-between gap-3">
-                <!-- Left: Brand + 12 Mins Badge + Live GPS Geofence Status -->
-                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-                    <!-- Lightning ETA Pill -->
-                    <div class="bg-gradient-to-br from-amber-300 via-amber-400 to-orange-400 text-zepto-950 rounded-2xl px-2.5 py-1.5 flex flex-col items-center justify-center shadow-md shrink-0 bolt-pulse">
-                        <div class="flex items-center gap-1 font-display font-extrabold text-xs sm:text-sm leading-none tracking-tight">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span id="headerEtaText">30 MINS</span>
-                        </div>
-                        <span class="text-[9px] font-bold uppercase tracking-wider opacity-85 mt-0.5">Superfast</span>
-                    </div>
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-black text-brand-600 tracking-tight" id="headerStoreName">Weaverly Express</h1>
+        <p class="text-xs text-gray-500 font-medium" id="headerStoreTagline">Ultra-Fast Local Dry Goods & Staples</p>
+      </div>
+      <!-- Cart Icon & Counter -->
+      <button onclick="toggleCartDrawer(true)" class="relative p-2 bg-brand-50 text-brand-700 rounded-full hover:bg-brand-100 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span id="headerCartCount" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </button>
+    </div>
 
-                    <!-- Store Name & Live GPS Distance Indicator -->
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2">
-                            <h1 id="headerStoreName" class="font-display font-extrabold text-base sm:text-xl tracking-tight truncate">Weaverly Express</h1>
-                            <span id="radiusStatusBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/40 shrink-0">
-                                <i class="fa-solid fa-location-crosshairs"></i> Verify GPS
-                            </span>
-                        </div>
-                        <button onclick="requestRealUserGPS()" class="flex items-center gap-1.5 text-xs text-purple-200 hover:text-white transition truncate max-w-full mt-0.5 text-left group">
-                            <i class="fa-solid fa-location-dot text-zepto-pink shrink-0 group-hover:scale-110 transition-transform"></i>
-                            <span id="headerDistanceText" class="truncate font-medium underline decoration-purple-400/60 underline-offset-2">Tap to verify live GPS (1.0 km delivery zone)</span>
-                        </button>
-                    </div>
-                </div>
+    <!-- Location Status Banner -->
+    <div id="locationBanner" class="bg-amber-50 border-t border-amber-200 px-4 py-2 text-xs flex items-center justify-between max-w-4xl mx-auto">
+      <div class="flex items-center space-x-2 truncate">
+        <span id="locStatusIcon" class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+        <span id="locStatusText" class="text-amber-800 font-medium">Checking delivery radius...</span>
+      </div>
+      <button id="btnRetryLoc" onclick="requestUserLocation()" class="text-xs bg-amber-600 text-white font-semibold px-2.5 py-1 rounded shadow-sm hover:bg-amber-700">
+        Enable GPS
+      </button>
+    </div>
+  </header>
 
-                <!-- Right: Detect GPS CTA, Min Order Tag & Cart Trigger -->
-                <div class="flex items-center gap-2 shrink-0">
-                    <button
-                        onclick="requestRealUserGPS()"
-                        id="headerGpsBtn"
-                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-amber-300 transition active:scale-95"
-                        title="Verify your live GPS location for 1 km delivery"
-                    >
-                        <i class="fa-solid fa-location-crosshairs"></i>
-                        <span id="headerGpsBtnText">Detect Live GPS</span>
-                    </button>
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 py-4 space-y-6">
 
-                    <div class="hidden lg:flex flex-col items-end bg-white/10 rounded-xl px-3 py-1.5 border border-white/10">
-                        <span class="text-[10px] uppercase tracking-wider text-purple-200 font-semibold">Store Policy</span>
-                        <span class="text-xs font-extrabold text-amber-300">Min ₹<span id="headerMinOrder">499</span> • ≤ <span id="headerMaxRadius">1</span> km</span>
-                    </div>
+    <!-- Category Filter Bar -->
+    <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryContainer">
+      <button onclick="filterCategory('All')" class="category-pill active-category px-4 py-1.5 text-xs font-semibold rounded-full bg-brand-600 text-white whitespace-nowrap shadow-sm">
+        All Items
+      </button>
+    </div>
 
-                    <button onclick="toggleCartDrawer(true)" class="relative bg-zepto-pink hover:bg-zepto-pinkHover text-white font-bold px-3.5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95">
-                        <i class="fa-solid fa-bag-shopping text-base"></i>
-                        <div class="text-left leading-tight hidden sm:block">
-                            <div id="headerCartCount" class="text-[11px] font-semibold opacity-90">0 Items</div>
-                            <div id="headerCartTotal" class="text-xs font-extrabold">₹0</div>
-                        </div>
-                        <span id="mobileCartBadge" class="sm:hidden bg-white text-zepto-pink text-xs font-extrabold px-1.5 py-0.5 rounded-full">0</span>
-                    </button>
-                </div>
+    <!-- Minimum Order Status Alert -->
+    <div id="minOrderBanner" class="bg-brand-50 border border-brand-200 rounded-xl p-3 text-xs text-brand-800 flex justify-between items-center">
+      <span>Minimum order value for delivery is <strong>₹499</strong>.</span>
+      <span id="minOrderDiffText" class="font-bold text-brand-600">Add ₹499 more</span>
+    </div>
+
+    <!-- Product Grid -->
+    <div>
+      <h2 class="text-base font-bold text-gray-800 mb-3" id="currentCategoryTitle">All Products</h2>
+      <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <!-- Products render here dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Checkout Bar -->
+  <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-3 z-30">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <div>
+        <div class="text-xs text-gray-500 font-medium">Cart Total</div>
+        <div class="text-lg font-black text-gray-900" id="bottomBarTotal">₹0</div>
+      </div>
+      <button id="btnOpenCheckout" onclick="toggleCartDrawer(true)" class="flex-1 max-w-xs bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-sm transition-all flex items-center justify-center space-x-2">
+        <span>View Cart</span>
+        <span id="bottomBarBadge" class="bg-brand-800 text-xs px-2 py-0.5 rounded-full">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cart & Checkout Slide-Over Drawer -->
+  <div id="cartModal" class="fixed inset-0 bg-black/60 z-50 hidden transition-opacity flex justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+      <!-- Drawer Header -->
+      <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-brand-50">
+        <div>
+          <h3 class="font-black text-gray-900 text-base">Your Cart</h3>
+          <p class="text-xs text-gray-600" id="drawerStoreAddress">Store Hub: Yamuna Vihar</p>
+        </div>
+        <button onclick="toggleCartDrawer(false)" class="p-1.5 text-gray-500 hover:text-gray-800 rounded-full">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Cart Items List -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3" id="cartItemList">
+        <!-- Cart items injected here -->
+      </div>
+
+      <!-- Customer Checkout Details -->
+      <div class="p-4 border-t border-gray-200 bg-gray-50 space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500">Delivery Information</h4>
+        <input type="text" id="custName" placeholder="Your Full Name *" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
+        <input type="text" id="custAddress" placeholder="Complete House / Flat Address *" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
+        <input type="text" id="custNotes" placeholder="Landmark or delivery note (optional)" class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-600 bg-white" />
+
+        <!-- Bill Breakdown -->
+        <div class="space-y-1 pt-2 border-t border-gray-200 text-xs text-gray-600">
+          <div class="flex justify-between"><span>Subtotal</span><span id="billSubtotal">₹0</span></div>
+          <div class="flex justify-between"><span>Delivery Charge (&lt; 1 km)</span><span class="text-emerald-600 font-semibold">FREE</span></div>
+          <div class="flex justify-between font-bold text-gray-900 text-sm pt-1 border-t border-gray-200">
+            <span>To Pay</span><span id="billTotal">₹0</span>
+          </div>
+        </div>
+
+        <!-- WhatsApp Checkout Action Button -->
+        <button id="btnWhatsAppOrder" onclick="processWhatsAppCheckout()" disabled class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-300 text-gray-500 cursor-not-allowed shadow transition-all flex items-center justify-center space-x-2">
+          <span>1-Click Order on WhatsApp</span>
+        </button>
+        <p id="orderWarningText" class="text-center text-[11px] text-amber-700 font-medium"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // ==========================================
+    // 1. STORE & PRODUCT CONFIGURATION
+    // ==========================================
+    const STORE_CONFIG = Object.freeze({
+      name: "Weaverly Express",
+      tagline: "Ultra-Fast Local Dry Goods & Staples",
+      phone: "918076433724", // <-- Put your WhatsApp Number here (format: CountryCode + Number, no + sign)
+      minOrderValue: 499,
+      maxDeliveryRadiusKm: 1.0,
+      storeLat: 28.6979998,     // <-- Put your Store Latitude here
+      storeLng: 77.2694341,     // <-- Put your Store Longitude here
+      address: "Yamuna Vihar, Delhi 110053",
+      orderPrefix: "WV"
+    });
+
+    const PRODUCTS = [
+      { id: 1, name: "Premium Basmati Rice", category: "Grains", price: 180, mrp: 220, unit: "1 kg", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&q=80" },
+      { id: 2, name: "Chakki Fresh Atta", category: "Grains", price: 210, mrp: 250, unit: "5 kg", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&q=80" },
+      { id: 3, name: "Toor Dal (Arhar)", category: "Pulses", price: 165, mrp: 195, unit: "1 kg", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=80" },
+      { id: 4, name: "Moong Dal Washed", category: "Pulses", price: 140, mrp: 170, unit: "1 kg", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&q=80" },
+      { id: 5, name: "Cold Pressed Mustard Oil", category: "Oils", price: 190, mrp: 230, unit: "1 Litre", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&q=80" },
+      { id: 6, name: "Desi Cow Ghee", category: "Dairy & Ghee", price: 340, mrp: 390, unit: "500 ml", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&q=80" },
+      { id: 7, name: "Tata Salt Vacuum Evaporated", category: "Spices", price: 28, mrp: 30, unit: "1 kg", image: "https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?w=300&q=80" },
+      { id: 8, name: "Kashmiri Red Chilli Powder", category: "Spices", price: 85, mrp: 110, unit: "200 g", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&q=80" },
+      { id: 9, name: "Organic Jaggery Powder", category: "Dry Goods", price: 75, mrp: 95, unit: "500 g", image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=300&q=80" }
+    ];
+
+    // ==========================================
+    // 2. APP STATE
+    // ==========================================
+    let cart = {}; // { productId: quantity }
+    let activeCategory = "All";
+    let userLocation = {
+      lat: null,
+      lng: null,
+      distanceKm: null,
+      isVerified: false,
+      errorMsg: null
+    };
+
+    // ==========================================
+    // 3. HAVERSINE DISTANCE CALCULATION
+    // ==========================================
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // ==========================================
+    // 4. GPS & LOCATION DETECTION
+    // ==========================================
+    function requestUserLocation() {
+      const statusIcon = document.getElementById("locStatusIcon");
+      const statusText = document.getElementById("locStatusText");
+      const retryBtn = document.getElementById("btnRetryLoc");
+
+      if (!navigator.geolocation) {
+        statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
+        statusText.textContent = "GPS not supported on your browser.";
+        userLocation.isVerified = false;
+        validateCheckoutState();
+        return;
+      }
+
+      statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+      statusText.textContent = "Requesting your live GPS...";
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const dist = calculateDistance(STORE_CONFIG.storeLat, STORE_CONFIG.storeLng, lat, lng);
+
+          userLocation.lat = lat;
+          userLocation.lng = lng;
+          userLocation.distanceKm = dist;
+          userLocation.isVerified = true;
+          userLocation.errorMsg = null;
+
+          if (dist <= STORE_CONFIG.maxDeliveryRadiusKm) {
+            statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-emerald-500";
+            statusText.textContent = `In Delivery Zone (${dist.toFixed(2)} km from store)`;
+            if (retryBtn) retryBtn.classList.add("hidden");
+          } else {
+            statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
+            statusText.textContent = `Out of Range (${dist.toFixed(2)} km away, max is ${STORE_CONFIG.maxDeliveryRadiusKm} km)`;
+            if (retryBtn) retryBtn.classList.remove("hidden");
+          }
+          validateCheckoutState();
+        },
+        (error) => {
+          userLocation.isVerified = false;
+          statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
+          if (error.code === error.PERMISSION_DENIED) {
+            statusText.textContent = "Location permission denied. Click 'Enable GPS'.";
+          } else {
+            statusText.textContent = "Unable to get GPS location. Click 'Enable GPS'.";
+          }
+          if (retryBtn) retryBtn.classList.remove("hidden");
+          validateCheckoutState();
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    // ==========================================
+    // 5. RENDER PRODUCTS & CATEGORIES
+    // ==========================================
+    function renderCategories() {
+      const container = document.getElementById("categoryContainer");
+      if (!container) return;
+
+      const categories = ["All", ...new Set(PRODUCTS.map(p => p.category))];
+      container.innerHTML = categories.map(cat => `
+        <button onclick="filterCategory('${cat}')" 
+          class="category-pill px-4 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition-all shadow-sm ${
+            activeCategory === cat ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }">
+          ${cat}
+        </button>
+      `).join("");
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.getElementById("currentCategoryTitle").textContent = cat === "All" ? "All Products" : cat;
+      renderCategories();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("productsGrid");
+      if (!grid) return;
+
+      const filtered = activeCategory === "All" 
+        ? PRODUCTS 
+        : PRODUCTS.filter(p => p.category === activeCategory);
+
+      grid.innerHTML = filtered.map(item => {
+        const qtyInCart = cart[item.id] || 0;
+        const discountPct = Math.round(((item.mrp - item.price) / item.mrp) * 100);
+
+        return `
+          <div class="bg-white border border-gray-100 rounded-2xl p-2.5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between relative">
+            ${discountPct > 0 ? `
+              <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                ${discountPct}% OFF
+              </span>
+            ` : ''}
+            
+            <div class="w-full h-28 bg-gray-50 rounded-xl overflow-hidden mb-2">
+              <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/f3f4f6/9ca3af?text=Product'" />
             </div>
 
-            <!-- Live Search Input Bar -->
-            <div class="mt-2.5 relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                <input
-                    id="searchInput"
-                    type="text"
-                    oninput="handleSearchInput(this.value)"
-                    placeholder="Search for 'Atta', 'Milk', 'Almonds', 'Maggi'..."
-                    class="w-full pl-10 pr-20 py-2.5 bg-white text-slate-900 placeholder-slate-400 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zepto-pink shadow-inner"
-                >
-                <button
-                    id="clearSearchBtn"
-                    onclick="handleSearchInput('')"
-                    class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-2 py-1 rounded-lg transition"
-                >
-                    Clear
+            <div>
+              <p class="text-[11px] text-gray-400 font-medium">${item.unit}</p>
+              <h3 class="text-xs font-bold text-gray-900 line-clamp-1">${item.name}</h3>
+              <div class="flex items-center space-x-1.5 mt-1">
+                <span class="text-xs font-black text-gray-900">₹${item.price}</span>
+                <span class="text-[10px] text-gray-400 line-through">₹${item.mrp}</span>
+              </div>
+            </div>
+
+            <div class="mt-2.5">
+              ${qtyInCart === 0 ? `
+                <button onclick="updateCartItem(${item.id}, 1)" class="w-full py-1.5 border border-brand-600 text-brand-600 hover:bg-brand-50 text-xs font-bold rounded-lg transition-colors">
+                  ADD
                 </button>
-            </div>
-        </div>
-
-        <!-- Horizontal Category Pills Bar (Dynamically Populated from PRODUCTS) -->
-        <div class="bg-white text-slate-800 border-b border-slate-200 shadow-sm">
-            <div class="max-w-6xl mx-auto px-3 sm:px-6">
-                <div id="categoryTabsContainer" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2.5">
-                    <!-- Populated via JS from Single Source of Truth -->
+              ` : `
+                <div class="flex items-center justify-between bg-brand-600 text-white rounded-lg p-0.5">
+                  <button onclick="updateCartItem(${item.id}, -1)" class="w-7 py-1 text-sm font-bold flex items-center justify-center hover:bg-brand-700 rounded-md">−</button>
+                  <span class="text-xs font-black">${qtyInCart}</span>
+                  <button onclick="updateCartItem(${item.id}, 1)" class="w-7 py-1 text-sm font-bold flex items-center justify-center hover:bg-brand-700 rounded-md">+</button>
                 </div>
+              `}
             </div>
-        </div>
-    </header>
+          </div>
+        `;
+      }).join("");
+    }
 
-    <!-- ============================================================================ -->
-    <!-- LIVE GPS VERIFICATION / OUT-OF-RADIUS STATUS BANNER                          -->
-    <!-- ============================================================================ -->
-    <div id="gpsActionBanner" class="bg-amber-500 text-slate-950 px-4 py-2.5 shadow-sm">
+    // ==========================================
+    // 6. CART MANAGEMENT
+    // ==========================================
+    function updateCartItem(id, change) {
+      const current = cart[id] || 0;
+      const next = current + change;
+      if (next <= 0) {
+        delete cart[id];
+      } else {
+        cart[id] = next;
+      }
+      renderProducts();
+      renderCartDrawer();
+      updateBadgesAndTotals();
+    }
+
+    function calculateSubtotal() {
+      let total = 0;
+      for (const [id, qty] of Object.entries(cart)) {
+        const item = PRODUCTS.find(p => p.id == id);
+        if (item) total += item.price * qty;
+      }
+      return total;
+    }
+
+    function updateBadgesAndTotals() {
+      const count = Object.values(cart).reduce((a, b) => a + b, 0);
+      const subtotal = calculateSubtotal();
+
+      document.getElementById("headerCartCount").textContent = count;
+      document.getElementById("bottomBarBadge").textContent = count;
+      document.getElementById("bottomBarTotal").textContent = `₹${subtotal}`;
+
+      // Minimum order status banner
+      const diff = STORE_CONFIG.minOrderValue - subtotal;
+      const bannerDiff = document.getElementById("minOrderDiffText");
+      if (diff > 0) {
+        bannerDiff.textContent = `Add ₹${diff} more`;
+        bannerDiff.className = "font-bold text-brand-600";
+      } else {
+        bannerDiff.textContent = "Minimum met! Ready to deliver";
+        bannerDiff.className = "font-bold text-emerald-600";
+      }
+
+      validateCheckoutState();
+    }
+
+    function renderCartDrawer() {
+      const list = document.getElementById("cartItemList");
+      const itemsInCart = Object.entries(cart);
+
+      if (itemsInCart.length === 0) {
+        list.innerHTML = `
+          <div class="h-48 flex flex-col items-center justify-center text-gray-400 space-y-2">
+            <svg class="w-12 h-12 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <p class="text-xs font-semibold">Your cart is empty</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = itemsInCart.map(([id, qty]) => {
+          const item = PRODUCTS.find(p => p.id == id);
+          if (!item) return '';
+          return `
+            <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-100">
+              <div class="flex items-center space-x-2.5">
+                <img src="${item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://placehold.co/100x100/f3f4f6/9ca3af?text=Item'" />
+                <div>
+                  <h4 class="text-xs font-bold text-gray-900">${item.name}</h4>
+                  <p class="text-[10px] text-gray-500">₹${item.price} x ${qty} = ₹${item.price * qty}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-1.5 bg-white border border-gray-200 rounded-lg p-0.5">
+                <button onclick="updateCartItem(${item.id}, -1)" class="w-6 h-6 text-xs font-bold flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded">−</button>
+                <span class="text-xs font-black px-1">${qty}</span>
+                <button onclick="updateCartItem(${item.t-slate-950 px-4 py-2.5 shadow-sm">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
                 <div class="w-7 h-7 rounded-full bg-slate-950/15 flex items-center justify-center shrink-0">
