@@ -1,73 +1,333 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <title>Coming soon!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Weaverly Express | 12-Min Instant Local Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+
+        const STORE_CONFIG = Object.freeze({
+  name: "Weaverly Express",
+  tagline: "Ultra-Fast Local Dry Goods & Staples",
+  phone: "918076433724",              // <--- 1. CHANGE THIS (WhatsApp Number)
+  currency: "₹",
+  minOrderValue: 499,
+  maxDeliveryRadiusKm: 1.0,
+  storeLat: 28.6979998,                  // <--- 2. CHANGE THIS (Store Latitude)
+  storeLng: 77.2694341,                  // <--- 3. CHANGE THIS (Store Longitude)
+  address: "Block C, Yamuna Vihar, Delhi 110053", // <--- Display address
+  orderPrefix: "WV"
+});
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        zepto: {
+                            950: '#1c0636',
+                            900: '#2b0952',
+                            800: '#3c0d73',
+                            700: '#501496',
+                            600: '#6b21a8',
+                            pink: '#ff3269',
+                            pinkHover: '#e61e54',
+                            pinkLight: '#fff0f4',
+                            mint: '#059669',
+                            gold: '#f59e0b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        html,
-        body {
-            width: 100%;
-            height: 100%;
+        /* Hide scrollbars for horizontal pill bars while keeping scrollability */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-
-        html {
-            display: table;
-            font-family: Lato, "Segoe UI", Avenir, Ubuntu, Tahoma, Verdana, Helvetica, sans-serif;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-
-        body {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
+        /* Subtle pulse for 12-min lightning badge */
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
         }
-
-        h1 {
-            font-size: 4em;
-            font-weight: normal;
-            text-transform: lowercase;
+        .bolt-pulse {
+            animation: pulseGlow 2s infinite ease-in-out;
         }
-
-        svg {
-            width: 250px;
-            height: 250px;
+        /* Smooth Drawer & Modal Transitions */
+        .drawer-backdrop {
+            background-color: rgba(17, 7, 34, 0.65);
+            backdrop-filter: blur(4px);
+        }
+        /* Custom subtle pattern for header */
+        .zepto-header-bg {
+            background: linear-gradient(135deg, #220641 0%, #3b0d71 55%, #4d1291 100%);
+        }
+        .product-card-shadow {
+            box-shadow: 0 2px 10px -2px rgba(43, 9, 82, 0.07), 0 1px 3px -1px rgba(0, 0, 0, 0.05);
+        }
+        .product-card-shadow:hover {
+            box-shadow: 0 10px 22px -4px rgba(59, 13, 113, 0.14);
         }
     </style>
 </head>
-<body>
-    <!-- Customize Icon Color -->
-    <!-- https://www.flaticon.com/free-icon/fast-time_2972562?term=clock&page=1&position=27# -->
-    <?xml version="1.0"?>
-    <svg xmlns="http://www.w3.org/2000/svg" id="coming_soon" enable-background="new 0 0 512 512" height="512px" viewBox="0 0 512 512" width="512px">
-        <g>
-            <g>
-                <circle cx="319.528" cy="256" fill="#95d6a4" r="184.972" data-original="#95D6A4" class="active-path" style="fill:#E33B3B" data-old_color="#95d6a4" />
-                <path d="m319.528 71.029c-4.682 0-9.322.178-13.917.52 95.656 7.115 171.055 86.976 171.055 184.451s-75.399 177.336-171.055 184.452c4.595.342 9.235.52 13.917.52 102.157-.001 184.972-82.815 184.972-184.972s-82.815-184.971-184.972-184.971z" fill="#78c2a4" data-original="#78C2A4" class="" style="fill:#FB5252" data-old_color="#78c2a4" />
-                <circle cx="319.528" cy="256" fill="#f4fbff" r="142.033" data-original="#F4FBFF" class="" style="fill:#F4FBFF" />
-                <path d="m319.528 113.967c-4.321 0-8.594.204-12.817.582 72.435 6.48 129.215 67.33 129.215 141.451s-56.78 134.97-129.215 141.451c4.223.377 8.496.582 12.817.582 78.443 0 142.033-63.59 142.033-142.032 0-78.444-63.59-142.034-142.033-142.034z" fill="#daf1f4" data-original="#DAF1F4" class="" />
-                <g>
-                    <path d="m38.872 149.21h79.098c4.142 0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5h-79.098c-4.142 0-7.5 3.357-7.5 7.5s3.357 7.5 7.5 7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m115.258 185.317h-31.246c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h31.246c4.142 0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m7.5 237.327h76.512c4.142 0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5h-76.512c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m125.47 370.289c0-4.143-3.358-7.5-7.5-7.5h-79.098c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h79.098c4.142 0 7.5-3.357 7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m115.258 311.683h-31.246c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h31.246c4.142 0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m91.512 282.173c0-4.143-3.358-7.5-7.5-7.5h-76.512c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h76.512c4.142 0 7.5-3.357 7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m319.529 165.83c4.143 0 7.5-3.357 7.5-7.5v-11.448c0-4.143-3.357-7.5-7.5-7.5s-7.5 3.357-7.5 7.5v11.448c0 4.143 3.357 7.5 7.5 7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m401.99 173.538c-2.93-2.928-7.678-2.928-10.607 0l-8.095 8.095c-2.929 2.93-2.929 7.678 0 10.607 2.931 2.929 7.678 2.928 10.607 0l8.095-8.095c2.928-2.929 2.928-7.677 0-10.607z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m417.199 248.5c-4.143 0-7.5 3.357-7.5 7.5s3.357 7.5 7.5 7.5h11.447c4.143 0 7.5-3.357 7.5-7.5s-3.357-7.5-7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m393.895 319.759c-2.93-2.928-7.678-2.928-10.607 0-2.929 2.93-2.929 7.678 0 10.607l8.095 8.095c2.931 2.929 7.678 2.928 10.607 0 2.929-2.93 2.929-7.678 0-10.607z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m312.029 353.67v11.447c0 4.143 3.357 7.5 7.5 7.5s7.5-3.357 7.5-7.5v-11.447c0-4.143-3.357-7.5-7.5-7.5s-7.5 3.358-7.5 7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m245.162 319.759-8.095 8.095c-2.929 2.93-2.929 7.678 0 10.607 2.93 2.929 7.678 2.928 10.606 0l8.095-8.095c2.929-2.93 2.929-7.678 0-10.607-2.928-2.928-7.677-2.928-10.606 0z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m210.411 248.5c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h11.448c4.142 0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m255.769 181.633-8.095-8.095c-2.929-2.928-7.678-2.928-10.606 0-2.929 2.93-2.929 7.678 0 10.607l8.095 8.095c2.93 2.929 7.678 2.928 10.606 0 2.929-2.929 2.929-7.677 0-10.607z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m359.859 256c0-4.143-3.357-7.5-7.5-7.5h-25.33v-55.684c0-4.143-3.357-7.5-7.5-7.5s-7.5 3.357-7.5 7.5v63.184c0 4.143 3.357 7.5 7.5 7.5h32.83c4.142 0 7.5-3.357 7.5-7.5z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m461.741 254.762c4.135-.251 7.283-3.806 7.032-7.94-4.771-78.703-70.327-140.354-149.245-140.354-82.452 0-149.532 67.08-149.532 149.533 0 82.452 67.08 149.532 149.532 149.532 73.869 0 136.9-54.122 147.865-127.157.615-4.096-2.207-7.915-6.304-8.53-4.086-.613-7.915 2.206-8.53 6.304-9.85 65.614-66.506 114.384-133.031 114.384-74.181 0-134.532-60.351-134.532-134.532s60.351-134.533 134.532-134.533c71.001 0 129.98 55.461 134.272 126.263.25 4.132 3.802 7.27 7.941 7.03z" data-original="#000000" class="" style="fill:#000000" />
-                    <path d="m319.528 63.529c-26.381 0-52.228 5.473-76.018 15.708h-132.329c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h104.113c-14.077 9.06-27.036 19.988-38.462 32.604-2.78 3.069-2.546 7.812.524 10.593 3.071 2.781 7.812 2.546 10.594-.524 33.602-37.102 81.561-58.381 131.578-58.381 97.858 0 177.472 79.613 177.472 177.471 0 97.857-79.613 177.471-177.472 177.471-97.858 0-177.471-79.613-177.471-177.471 0-34.268 9.789-67.528 28.307-96.186 2.248-3.479 1.25-8.121-2.229-10.369-3.479-2.247-8.121-1.251-10.37 2.229-20.09 31.088-30.708 67.163-30.708 104.326 0 67.766 35.206 127.458 88.285 161.763h-104.16c-4.142 0-7.5 3.357-7.5 7.5s3.358 7.5 7.5 7.5h132.225c23.36 10.099 49.097 15.708 76.122 15.708 106.128 0 192.471-86.342 192.471-192.471s-86.343-192.471-192.472-192.471z" data-original="#000000" class="" style="fill:#000000" />
-                </g>
-            </g>
-        </g>
-    </svg>
-    <h1>Coming soon!</h1>
-</body>
-</html>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-zepto-pink selection:text-white pb-36">
+
+    <!-- ============================================================================ -->
+    <!-- TOP STICKY ZEPTO-STYLE HEADER + STRICT LIVE 1KM GPS BAR + SEARCH             -->
+    <!-- ============================================================================ -->
+    <header class="sticky top-0 z-30 zepto-header-bg text-white shadow-lg">
+        <!-- Main Header Container -->
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-3">
+            <div class="flex items-center justify-between gap-3">
+                <!-- Left: Brand + 12 Mins Badge + Live GPS Geofence Status -->
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+                    <!-- Lightning ETA Pill -->
+                    <div class="bg-gradient-to-br from-amber-300 via-amber-400 to-orange-400 text-zepto-950 rounded-2xl px-2.5 py-1.5 flex flex-col items-center justify-center shadow-md shrink-0 bolt-pulse">
+                        <div class="flex items-center gap-1 font-display font-extrabold text-xs sm:text-sm leading-none tracking-tight">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span id="headerEtaText">30 MINS</span>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wider opacity-85 mt-0.5">Superfast</span>
+                    </div>
+
+                    <!-- Store Name & Live GPS Distance Indicator -->
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h1 id="headerStoreName" class="font-display font-extrabold text-base sm:text-xl tracking-tight truncate">Weaverly Express</h1>
+                            <span id="radiusStatusBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/40 shrink-0">
+                                <i class="fa-solid fa-location-crosshairs"></i> Verify GPS
+                            </span>
+                        </div>
+                        <button onclick="requestRealUserGPS()" class="flex items-center gap-1.5 text-xs text-purple-200 hover:text-white transition truncate max-w-full mt-0.5 text-left group">
+                            <i class="fa-solid fa-location-dot text-zepto-pink shrink-0 group-hover:scale-110 transition-transform"></i>
+                            <span id="headerDistanceText" class="truncate font-medium underline decoration-purple-400/60 underline-offset-2">Tap to verify live GPS (1.0 km delivery zone)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Detect GPS CTA, Min Order Tag & Cart Trigger -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button
+                        onclick="requestRealUserGPS()"
+                        id="headerGpsBtn"
+                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-amber-300 transition active:scale-95"
+                        title="Verify your live GPS location for 1 km delivery"
+                    >
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        <span id="headerGpsBtnText">Detect Live GPS</span>
+                    </button>
+
+                    <div class="hidden lg:flex flex-col items-end bg-white/10 rounded-xl px-3 py-1.5 border border-white/10">
+                        <span class="text-[10px] uppercase tracking-wider text-purple-200 font-semibold">Store Policy</span>
+                        <span class="text-xs font-extrabold text-amber-300">Min ₹<span id="headerMinOrder">499</span> • ≤ <span id="headerMaxRadius">1</span> km</span>
+                    </div>
+
+                    <button onclick="toggleCartDrawer(true)" class="relative bg-zepto-pink hover:bg-zepto-pinkHover text-white font-bold px-3.5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-bag-shopping text-base"></i>
+                        <div class="text-left leading-tight hidden sm:block">
+                            <div id="headerCartCount" class="text-[11px] font-semibold opacity-90">0 Items</div>
+                            <div id="headerCartTotal" class="text-xs font-extrabold">₹0</div>
+                        </div>
+                        <span id="mobileCartBadge" class="sm:hidden bg-white text-zepto-pink text-xs font-extrabold px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Search Input Bar -->
+            <div class="mt-2.5 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input
+                    id="searchInput"
+                    type="text"
+                    oninput="handleSearchInput(this.value)"
+                    placeholder="Search for 'Atta', 'Milk', 'Almonds', 'Maggi'..."
+                    class="w-full pl-10 pr-20 py-2.5 bg-white text-slate-900 placeholder-slate-400 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zepto-pink shadow-inner"
+                >
+                <button
+                    id="clearSearchBtn"
+                    onclick="handleSearchInput('')"
+                    class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-2 py-1 rounded-lg transition"
+                >
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Horizontal Category Pills Bar (Dynamically Populated from PRODUCTS) -->
+        <div class="bg-white text-slate-800 border-b border-slate-200 shadow-sm">
+            <div class="max-w-6xl mx-auto px-3 sm:px-6">
+                <div id="categoryTabsContainer" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2.5">
+                    <!-- Populated via JS from Single Source of Truth -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================================ -->
+    <!-- LIVE GPS VERIFICATION / OUT-OF-RADIUS STATUS BANNER                          -->
+    <!-- ============================================================================ -->
+    <div id="gpsActionBanner" class="bg-amber-500 text-slate-950 px-4 py-2.5 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-slate-950/15 flex items-center justify-center shrink-0">
+                    <i id="gpsBannerIcon" class="fa-solid fa-location-crosshairs text-slate-950 text-xs"></i>
+                </div>
+                <div>
+                    <p id="gpsBannerTitle" class="text-xs sm:text-sm font-extrabold">Live GPS Verification Required for Instant Delivery</p>
+                    <p id="gpsBannerSub" class="text-[11px] sm:text-xs font-medium opacity-90">We strictly deliver within <span id="bannerMaxRadiusVal">1.0</span> km of <span id="bannerStoreAddress">Main Hub</span>. Tap to verify your live location.</p>
+                </div>
+            </div>
+            <button onclick="requestRealUserGPS()" id="gpsBannerBtn" class="px-3.5 py-1.5 rounded-xl bg-slate-950 text-white font-bold text-xs hover:bg-slate-800 transition shrink-0 flex items-center gap-1.5 self-end sm:self-auto shadow-sm">
+                <i class="fa-solid fa-location-crosshairs text-amber-300"></i>
+                <span>Detect My Live GPS Location</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================================================ -->
+    <!-- MAIN CONTENT CONTAINER                                                       -->
+    <!-- ============================================================================ -->
+    <main class="max-w-6xl mx-auto px-3 sm:px-6 pt-4 space-y-6">
+
+        <!-- Hero Value Proposition & Minimum Order Strip -->
+        <section class="bg-gradient-to-r from-violet-900 via-purple-800 to-fuchsia-900 rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden">
+            <div class="absolute -right-8 -bottom-10 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-bolt text-[140px]"></i>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1.5 max-w-xl">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 font-extrabold text-[11px] uppercase tracking-wider">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> 1-Click WhatsApp Direct Store
+                    </div>
+                    <h2 class="font-display font-extrabold text-lg sm:text-2xl leading-tight">
+                        Groceries & Daily Essentials at Your Door in <span class="text-amber-300 underline decoration-wavy decoration-amber-400/60" id="heroEtaSpan">30 MINS</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-purple-100 leading-relaxed">
+                        Exclusively serving neighborhoods within <strong class="text-white"><span id="heroRadiusSpan">1.0</span> km</strong> of <span id="heroAddressSpan" class="underline decoration-purple-400">Main Hub, Sector B</span>. Zero delivery fees on all orders of <strong class="text-amber-300">₹<span id="heroMinOrderSpan">499</span></strong> or above!
+                    </p>
+                </div>
+
+                <!-- Live Store Policy Pills -->
+                <div class="grid grid-cols-3 gap-2 shrink-0">
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
+                        <div class="text-amber-300 font-extrabold text-sm sm:text-base">₹<span id="cardMinOrder">499</span></div>
+                        <div class="text-[10px] text-purple-200 font-medium">Min. Order</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
+                        <div class="text-emerald-300 font-extrabold text-sm sm:text-base">≤ <span id="cardMaxRadius">1.0</span> km</div>
+                        <div class="text-[10px] text-purple-200 font-medium">Live GPS Zone</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
+                        <div class="text-pink-300 font-extrabold text-sm sm:text-base">FREE</div>
+                        <div class="text-[10px] text-purple-200 font-medium">Delivery</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured / Flash Deals Shelf (Hidden during search or specific category filter) -->
+        <section id="featuredSection" class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-display font-extrabold text-base sm:text-lg text-slate-900 leading-none">Super Saver Combos & Bestsellers</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Fastest way to reach your ₹<span class="dyn-min-order">499</span> minimum cart value</p>
+                    </div>
+                </div>
+                <span class="text-xs font-bold text-zepto-700 bg-purple-100 px-2.5 py-1 rounded-full">Swipe →</span>
+            </div>
+
+            <div id="featuredCarousel" class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                <!-- Dynamically rendered from PRODUCTS -->
+            </div>
+        </section>
+
+        <!-- Main Product Catalog Grid -->
+        <section class="space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+                <div>
+                    <h3 id="catalogHeading" class="font-display font-extrabold text-base sm:text-xl text-slate-900">All Store Products</h3>
+                    <p id="catalogSubheading" class="text-xs text-slate-500">Fresh stock ready for instant dispatch</p>
+                </div>
+
+                <!-- Sort Filter -->
+                <div class="flex items-center gap-2">
+                    <select id="sortSelect" onchange="handleSortChange(this.value)" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zepto-600">
+                        <option value="featured">Sort: Featured</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="discount">Highest % Off</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dynamic Product Cards Grid -->
+            <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Populated dynamically from PRODUCTS array -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="emptyCatalogState" class="hidden bg-white rounded-2xl p-8 text-center border border-slate-200 my-4">
+                <div class="w-14 h-14 rounded-full bg-purple-50 text-zepto-600 flex items-center justify-center mx-auto mb-3 text-2xl">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <h4 class="font-display font-bold text-base text-slate-800">No matching products found</h4>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Try clearing your search filter or switching to "All" categories.</p>
+                <button onclick="resetCatalogFilters()" class="mt-4 px-4 py-2 bg-zepto-700 text-white text-xs font-bold rounded-xl hover:bg-zepto-800 transition">
+                    Show All Products
+                </button>
+            </div>
+        </section>
+
+        <!-- Minimal Store Footer (Secret 5-tap trigger on copyright text for Store Owner) -->
+        <footer class="pt-8 pb-6 border-t border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-700"><span id="footerStoreName">Weaverly Express</span> • Instant Neighborhood Quick-Commerce</p>
+            <p class="text-[11px] text-slate-500">Orders accepted via WhatsApp within <span id="footerRadius">1.0</span> km radius • Minimum order ₹<span id="footerMinOrder">499</span></p>
+            <p id="secretOwnerTrigger" onclick="handleSecretFooterTap()" class="text-[10px] text-slate-400 pt-2 select-none cursor-default">
+                © 2026 Weaverly Express. All rights reserved.
+            </p>
+        </footer>
+    </main>
+
+    <!-- ============================================================================ -->
+    <!-- STICKY FLOATING BOTTOM ZEPTO CART & ₹499 PROGRESS BAR                        -->
+    <!-- ============================================================================ -->
+    <div id="stickyBottomBar" class="fixed bottom-0 inset-x-0 z-30 p-2.5 sm:p-3 pointer-events-none transition-all duration-300">
+        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden pointer-events-auto">
+            <!-- Dynamic ₹499 Minimum Order Progress Bar Strip -->
+            <div id="bottomMinOrderStrip" class="bg-amber-50 px-3.5 py-2 border-b border-amber-200/70">
+                <div class="flex items-center justify-between text-xs mb-1">
+                    <span id="bottomProgressText" class="font-bold text-amber-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-amber-600"></i>
+                        Add ₹499 more to unlock free instant delivery
+                    </span>
+                    <span id="bottomProgressPercent" class="font-extrabold text-amber-700">0%</span>
+                </div>
+                <div class="w-full h-2 bg-amber-200/70 rounded-full overflow-hidden">
+                    <div id="bottomProgressBar" class="h-full bg-gradient-to-r from-amber-500 to-zepto-pink rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Bottom Cart Action Row -->
+            <div class="bg-zepto-900 text-white px-4 py-3 flex items-center justify-between gap-3">
+               
