@@ -6,1631 +6,579 @@
   <meta name="theme-color" content="#4c1d95" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Weaverly" />
   <title>Weaverly Express | 1.5 km Instant Delivery</title>
-
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #f3f4f6; color: #111827; min-height: 100vh; padding-bottom: 100px; }
+    .hidden { display: none !important; }
 
-    body {
-      background: #f3f4f6;
-      color: #111827;
-      min-height: 100vh;
-      padding-bottom: 105px;
-    }
+    /* HEADER */
+    .app-header { position: sticky; top: 0; z-index: 50; background: linear-gradient(135deg, #3b0764, #6d28d9); color: #fff; padding: 12px 14px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
+    .header-row { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .brand-title { font-size: 18px; font-weight: 900; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .zone-badge { background: #facc15; color: #1e1b4b; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 5px; }
+    .brand-sub { font-size: 11px; color: #e9d5ff; margin-top: 2px; }
+    .btn-install { background: #10b981; color: #fff; border: none; padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
-    .hidden {
-      display: none !important;
-    }
+    /* GATES (LOCATION & NOT SERVICEABLE) */
+    .gate-wrap { max-width: 420px; margin: 28px auto; padding: 0 14px; }
+    .gate-card { background: #fff; border-radius: 18px; padding: 24px 18px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; }
+    .gate-icon { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; background: #f3e8ff; }
+    .gate-title { font-size: 19px; font-weight: 900; margin-bottom: 8px; }
+    .gate-desc { font-size: 13px; color: #4b5563; line-height: 1.5; margin-bottom: 18px; }
+    .btn-main { width: 100%; background: #6d28d9; color: #fff; border: none; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer; }
 
-    /* TOP HEADER */
-    .app-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: linear-gradient(135deg, #3b0764, #6d28d9);
-      color: #ffffff;
-      padding: 12px 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-    }
+    /* STOREFRONT */
+    .loc-bar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 8px 14px; font-size: 12px; }
+    .loc-bar-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .container { max-width: 900px; margin: 0 auto; padding: 12px 14px; }
+    .search-box { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #d1d5db; font-size: 14px; margin-bottom: 10px; background: #fff; }
+    .mov-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; }
+    .mov-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-bottom: 6px; }
+    .mov-track { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+    .mov-fill { height: 100%; width: 0%; background: #db2777; transition: width 0.2s; }
+    .mov-fill.ok { background: #059669; }
 
-    .header-inner {
-      max-width: 920px;
-      margin: 0 auto;
-    }
+    .cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; }
+    .cat-btn { padding: 7px 13px; border-radius: 99px; border: 1px solid #d1d5db; background: #fff; font-size: 12px; font-weight: 800; white-space: nowrap; cursor: pointer; }
+    .cat-btn.active { background: #6d28d9; color: #fff; border-color: #6d28d9; }
 
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (min-width: 600px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 840px) { .grid { grid-template-columns: repeat(4, 1fr); } }
 
-    .brand-title {
-      font-size: 19px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .p-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .p-off { position: absolute; top: 8px; left: 8px; background: #059669; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 5px; }
+    .p-img { height: 100px; background: #f8fafc; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 42px; margin-bottom: 6px; overflow: hidden; }
+    .p-img img { width: 100%; height: 100%; object-fit: cover; }
+    .p-unit { font-size: 11px; font-weight: 700; color: #6b7280; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+    .p-name { font-size: 13px; font-weight: 800; min-height: 34px; margin-bottom: 6px; }
+    .p-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; border-top: 1px dashed #e5e7eb; }
+    .p-price { font-size: 15px; font-weight: 900; }
+    .p-mrp { font-size: 11px; color: #9ca3af; text-decoration: line-through; display: block; }
+    .btn-add { background: #fff; color: #db2777; border: 1.5px solid #db2777; padding: 6px 13px; border-radius: 8px; font-size: 12px; font-weight: 900; cursor: pointer; }
+    .qty-box { display: flex; align-items: center; background: #db2777; color: #fff; border-radius: 8px; }
+    .qty-btn { background: none; border: none; color: #fff; width: 26px; height: 26px; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .qty-num { font-size: 12px; font-weight: 900; min-width: 18px; text-align: center; }
 
-    .zone-badge {
-      background: #facc15;
-      color: #1e1b4b;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 2px 6px;
-      border-radius: 5px;
-    }
+    /* BOTTOM BAR & MODALS */
+    .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #d1d5db; padding: 10px 14px; z-index: 45; box-shadow: 0 -3px 12px rgba(0,0,0,0.08); }
+    .bottom-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .btn-order-bar { background: #6d28d9; color: #fff; border: none; padding: 11px 16px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; }
 
-    .brand-sub {
-      font-size: 11px;
-      color: #e9d5ff;
-      margin-top: 2px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-install {
-      background: #10b981;
-      color: #ffffff;
-      border: none;
-      padding: 7px 10px;
-      border-radius: 9px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .btn-cart-top {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      color: #ffffff;
-      padding: 7px 11px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    /* SAVED LOCATION BAR */
-    .saved-loc-bar {
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 8px 14px;
-      font-size: 12px;
-    }
-
-    .saved-loc-inner {
-      max-width: 920px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .loc-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-      color: #065f46;
-    }
-
-    .btn-recheck {
-      background: #f3f4f6;
-      border: 1px solid #d1d5db;
-      color: #374151;
-      padding: 4px 9px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* FULL SCREEN GATES (ASK LOCATION & NOT SERVICEABLE) */
-    .gate-wrap {
-      max-width: 440px;
-      margin: 36px auto;
-      padding: 0 16px;
-    }
-
-    .gate-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 28px 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      border: 1px solid #e5e7eb;
-    }
-
-    .gate-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      margin: 0 auto 14px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-    }
-
-    .gate-title {
-      font-size: 20px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      color: #111827;
-    }
-
-    .gate-desc {
-      font-size: 13px;
-      color: #4b5563;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .btn-primary-lg {
-      width: 100%;
-      background: #6d28d9;
-      color: #ffffff;
-      border: none;
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
-    }
-
-    .btn-primary-lg:active {
-      transform: scale(0.98);
-    }
-
-    /* STOREFRONT MAIN */
-    .store-container {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 12px 14px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      font-size: 14px;
-      background: #ffffff;
-      margin-bottom: 12px;
-      outline: none;
-    }
-
-    /* MINIMUM ORDER BAR */
-    .mov-box {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 11px 13px;
-      margin-bottom: 12px;
-    }
-
-    .mov-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .mov-bar-bg {
-      width: 100%;
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .mov-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: #db2777;
-      transition: width 0.25s ease;
-    }
-
-    .mov-bar-fill.unlocked {
-      background: #059669;
-    }
-
-    /* CATEGORIES */
-    .cat-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
-    }
-    .cat-scroll::-webkit-scrollbar { display: none; }
-
-    .cat-chip {
-      padding: 7px 14px;
-      border-radius: 99px;
-      border: 1px solid #d1d5db;
-      background: #ffffff;
-      color: #374151;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .cat-chip.active {
-      background: #6d28d9;
-      color: #ffffff;
-      border-color: #6d28d9;
-    }
-
-    /* PRODUCT GRID */
-    .prod-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    @media (min-width: 600px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (min-width: 840px) { .prod-grid { grid-template-columns: repeat(4, 1fr); } }
-
-    .prod-card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-
-    .off-ribbon {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: #059669;
-      color: #ffffff;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 5px;
-      z-index: 2;
-    }
-
-    .prod-thumb {
-      width: 100%;
-      height: 112px;
-      background: #f8fafc;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      margin-bottom: 8px;
-      font-size: 44px;
-    }
-
-    .prod-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .prod-unit {
-      font-size: 11px;
-      font-weight: 700;
-      color: #6b7280;
-      background: #f3f4f6;
-      padding: 2px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 4px;
-    }
-
-    .prod-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #111827;
-      min-height: 34px;
-      margin-bottom: 6px;
-    }
-
-    .prod-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 6px;
-      border-top: 1px dashed #e5e7eb;
-    }
-
-    .price-now {
-      font-size: 15px;
-      font-weight: 900;
-      color: #111827;
-    }
-
-    .price-mrp {
-      font-size: 11px;
-      color: #9ca3af;
-      text-decoration: line-through;
-      display: block;
-    }
-
-    .btn-add {
-      background: #ffffff;
-      color: #db2777;
-      border: 1.5px solid #db2777;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .qty-box {
-      display: flex;
-      align-items: center;
-      background: #db2777;
-      color: #ffffff;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .qty-btn {
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      width: 28px;
-      height: 28px;
-      font-size: 16px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .qty-num {
-      font-size: 12px;
-      font-weight: 900;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    /* STICKY BOTTOM CHECKOUT BAR */
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border-top: 1px solid #d1d5db;
-      padding: 10px 14px;
-      z-index: 45;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-    }
-
-    .bottom-inner {
-      max-width: 920px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .btn-checkout-bar {
-      background: #6d28d9;
-      color: #ffffff;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    /* MODALS */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 24, 39, 0.7);
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-    }
-
-    .modal-overlay.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: #ffffff;
-      width: 100%;
-      max-width: 480px;
-      max-height: 90vh;
-      border-radius: 18px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .modal-header {
-      padding: 14px 16px;
-      background: #f9fafb;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .btn-close {
-      background: #e5e7eb;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      padding: 16px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .field-input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .btn-whatsapp {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 900;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .btn-whatsapp.ready {
-      background: #16a34a;
-      color: #ffffff;
-    }
-
-    .btn-whatsapp.locked {
-      background: #e5e7eb;
-      color: #6b7280;
-      cursor: not-allowed;
-    }
-
-    /* SECRET URL ADMIN PANEL */
-    .admin-wrap {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 14px;
-    }
-
-    .admin-card {
-      background: #ffffff;
-      border: 2px solid #4c1d95;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
-
-    .code-output {
-      width: 100%;
-      height: 220px;
-      font-family: monospace;
-      font-size: 12px;
-      background: #0f172a;
-      color: #38bdf8;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-top: 8px;
-    }
+    .modal-bg { position: fixed; inset: 0; background: rgba(17,24,39,0.7); z-index: 100; display: none; align-items: center; justify-content: center; padding: 12px; }
+    .modal-bg.open { display: flex; }
+    .modal-box { background: #fff; width: 100%; max-width: 460px; max-height: 90vh; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; }
+    .modal-head { padding: 12px 16px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; font-weight: 900; }
+    .modal-body { padding: 14px; overflow-y: auto; flex: 1; }
+    .inp { width: 100%; padding: 9px 11px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; margin-bottom: 8px; }
+    .btn-wa { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 14px; font-weight: 900; cursor: pointer; margin-top: 8px; }
+    .btn-wa.ready { background: #16a34a; color: #fff; }
+    .btn-wa.locked { background: #e5e7eb; color: #6b7280; cursor: not-allowed; }
+    .code-area { width: 100%; height: 180px; background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 11px; padding: 10px; border-radius: 8px; margin-top: 6px; }
   </style>
 </head>
 <body>
-
-  <!-- =========================================================
-       TOP HEADER (WITH INSTALL WEB APP BUTTON)
-       ========================================================= -->
+    <!-- HEADER -->
   <header class="app-header">
-    <div class="header-inner">
-      <div class="header-top">
-        <div>
-          <div class="brand-title">
-            <span id="uiHeaderTitle">Weaverly Express</span>
-            <span class="zone-badge" id="uiRadiusBadge">1.5 KM ZONE</span>
-          </div>
-          <div class="brand-sub" id="uiHeaderSub">Min Order ₹499 • Instant Local Delivery</div>
+    <div class="header-row">
+      <div onclick="handleSecretAdminTap()">
+        <div class="brand-title">
+          <span id="uiStoreName">Weaverly Express</span>
+          <span class="zone-badge" id="uiZoneBadge">1.5 KM ZONE</span>
         </div>
-
-        <div class="header-actions">
-          <button type="button" class="btn-install" onclick="triggerInstallApp()">
-            📲 Download App
-          </button>
-          <button type="button" id="uiTopCartBtn" class="btn-cart-top hidden" onclick="openCartModal(true)">
-            <span>🛒</span>
-            <span id="uiTopCartCount">0</span>
-          </button>
-        </div>
+        <div class="brand-sub" id="uiStoreSub">Min Order ₹499 • Instant Local Delivery</div>
       </div>
+      <button type="button" class="btn-install" onclick="installAppPrompt()">📲 Download App</button>
     </div>
   </header>
 
-  <!-- =========================================================
-       VIEW 1: ASK USER LOCATION FIRST (IF NOT SAVED YET)
-       ========================================================= -->
-  <section id="viewLocationGate" class="gate-wrap hidden">
+    <!-- 1. LOCATION GATE (VISIBLE BY DEFAULT SO SCREEN IS NEVER BLANK) -->
+  <section id="secLocationGate" class="gate-wrap">
     <div class="gate-card">
-      <div class="gate-icon" style="background: #f3e8ff; color: #6d28d9;">📍</div>
+      <div class="gate-icon">📍</div>
       <h2 class="gate-title">Verify Your Delivery Location</h2>
       <p class="gate-desc">
-        We deliver groceries & dry goods within a <strong><span id="uiGateRadius">1.5</span> km radius</strong> of our store (<span id="uiGateStoreAddr">Yamuna Vihar</span>).<br /><br />
-        Allow location once—we will save it on your phone so you don't have to verify again!
+        We deliver within <strong><span id="uiGateRad">1.5</span> km</strong> of our shop (<span id="uiGateAddr">Yamuna Vihar, Delhi</span>) with a minimum order of <strong>₹499</strong>.<br><br>
+        Tap below to check your distance. Your location will be saved on your phone!
       </p>
-      <button type="button" id="btnDetectLocation" class="btn-primary-lg" onclick="requestCustomerGps()">
-        📍 Allow GPS Location to View Products
+      <button type="button" id="btnCheckGps" class="btn-main" onclick="checkUserGps()">
+        📍 Allow GPS Location & View Products
       </button>
-      <p id="uiLocGateStatus" style="margin-top: 12px; font-size: 12px; color: #d97706; font-weight: 700;"></p>
+      <p id="uiGpsMsg" style="margin-top:10px; font-size:12px; color:#d97706; font-weight:700;"></p>
     </div>
   </section>
 
-  <!-- =========================================================
-       VIEW 2: NOT SERVICEABLE SCREEN (IF DISTANCE > 1.5 KM)
-       ========================================================= -->
-  <section id="viewNotServiceable" class="gate-wrap hidden">
+   <!-- 2. NOT SERVICEABLE SCREEN (> 1.5 KM) -->
+  <section id="secNotServiceable" class="gate-wrap hidden">
     <div class="gate-card">
-      <div class="gate-icon" style="background: #fee2e2; color: #dc2626;">🚫</div>
-      <h2 class="gate-title">Location Not Serviceable</h2>
+      <div class="gate-icon" style="background:#fee2e2;">🚫</div>
+      <h2 class="gate-title">Not Serviceable</h2>
       <p class="gate-desc">
-        Your current location is <strong><span id="uiOutsideDist">0.00</span> km</strong> away from our store hub (<span id="uiOutsideStoreAddr">Yamuna Vihar</span>).<br /><br />
-        We currently deliver strictly within a <strong><span id="uiOutsideMaxRadius">1.5</span> km radius</strong>.
+        You are currently <strong><span id="uiFarDist">0.0</span> km</strong> away from our shop (<span id="uiFarAddr">Yamuna Vihar</span>).<br><br>
+        We only deliver within a <strong><span id="uiFarMax">1.5</span> km radius</strong>.
       </p>
-      <button type="button" class="btn-primary-lg" style="background: #374151;" onclick="requestCustomerGps()">
-        ↻ Re-check My GPS Location
-      </button>
+      <button type="button" class="btn-main" style="background:#374151;" onclick="checkUserGps()">↻ Re-check My GPS Location</button>
     </div>
   </section>
 
-  <!-- =========================================================
-       VIEW 3: PRODUCT STOREFRONT (SHOWN ONLY WHEN WITHIN 1.5 KM)
-       ========================================================= -->
-  <section id="viewStorefront" class="hidden">
-    <!-- Saved Customer Location & Profile Banner -->
-    <div class="saved-loc-bar">
-      <div class="saved-loc-inner">
-        <div class="loc-pill">
-          <span>✅ Serviceable (<span id="uiSavedDist">0.00</span> km from shop)</span>
-          <span id="uiSavedUserBadge" style="color: #4b5563; font-weight: 600;"></span>
-        </div>
-        <button type="button" class="btn-recheck" onclick="requestCustomerGps()">Change GPS</button>
+   <!-- 3. STOREFRONT (SHOWN WHEN <= 1.5 KM) -->
+  <section id="secStorefront" class="hidden">
+    <div class="loc-bar">
+      <div class="loc-bar-inner">
+        <span style="color:#065f46; font-weight:800;">✅ Serviceable (<span id="uiDistBadge">0.0</span> km) <span id="uiUserGreet" style="color:#374151;"></span></span>
+        <button type="button" onclick="checkUserGps()" style="background:#f3f4f6; border:1px solid #d1d5db; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">Update GPS</button>
       </div>
     </div>
 
-    <div class="store-container">
-      <!-- Search Bar -->
-      <input
-        type="text"
-        id="inSearch"
-        class="search-input"
-        placeholder="Search rice, atta, dal, oil, spices, dry fruits..."
-        oninput="renderProductGrid()"
-      />
+    <div class="container">
+      <input type="text" id="inSearch" class="search-box" placeholder="Search rice, atta, dal, oil, spices..." oninput="renderProducts()" />
 
-      <!-- ₹499 Minimum Order Value Progress -->
-      <div class="mov-box">
+      <div class="mov-card">
         <div class="mov-top">
-          <span id="uiMovText">Add ₹499 more for free delivery</span>
-          <span id="uiMovAmounts">₹0 / ₹499</span>
+          <span id="uiMovTitle">Add ₹499 more for free delivery</span>
+          <span id="uiMovAmt">₹0 / ₹499</span>
         </div>
-        <div class="mov-bar-bg">
-          <div id="uiMovFill" class="mov-bar-fill"></div>
-        </div>
+        <div class="mov-track"><div id="uiMovBar" class="mov-fill"></div></div>
       </div>
 
-      <!-- Category Pills -->
-      <div id="uiCategoryBar" class="cat-scroll"></div>
-
-      <!-- Products Grid -->
-      <div id="uiProductGrid" class="prod-grid"></div>
+      <div id="uiCatList" class="cat-row"></div>
+      <div id="uiProdGrid" class="grid"></div>
     </div>
 
-    <!-- Sticky Bottom Bar -->
     <div class="bottom-bar">
       <div class="bottom-inner">
         <div>
-          <div style="font-size: 11px; color: #6b7280; font-weight: 800;" id="uiBottomCount">0 ITEMS IN CART</div>
-          <div style="font-size: 18px; font-weight: 900;" id="uiBottomTotal">₹0</div>
+          <div style="font-size:11px; color:#6b7280; font-weight:800;" id="uiCartCount">0 ITEMS</div>
+          <div style="font-size:18px; font-weight:900;" id="uiCartTotal">₹0</div>
         </div>
-        <button type="button" class="btn-checkout-bar" onclick="openCartModal(true)">
-          One-Tap Order →
-        </button>
+        <button type="button" class="btn-order-bar" onclick="toggleCheckoutModal(true)">One-Tap Order →</button>
       </div>
     </div>
   </section>
-
-  <!-- =========================================================
-       VIEW 4: URL-ACTIVATED ADMIN PANEL (?admin=weaverly)
-       ========================================================= -->
-  <section id="viewAdminPanel" class="admin-wrap hidden">
-    <div class="admin-card">
+<!-- 4. ADMIN PANEL (ACCESS VIA ?admin=1 OR 5 TAPS ON HEADER TITLE) -->
+  <section id="secAdmin" class="container hidden">
+    <div class="gate-card" style="text-align:left; max-width:700px; margin:16px auto;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 style="font-size: 18px; font-weight: 900; color: #4c1d95;">⚙️ Weaverly Admin & GitHub Code Generator</h2>
-        <a href="?" style="font-size: 12px; font-weight: 800; color: #db2777;">Exit Admin →</a>
+        <h3 style="font-size:16px; font-weight:900; color:#4c1d95;">⚙️ Store Admin & GitHub Code Generator</h3>
+        <a href="?" style="font-size:12px; font-weight:800; color:#db2777;">Exit Admin</a>
       </div>
-      <p style="font-size: 12px; color: #4b5563; margin-bottom: 14px;">
-        Edit your store details or add products below. Then copy the generated code block at the bottom and paste it into your GitHub <code>index.html</code> file!
-      </p>
 
-      <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 8px;">1. Store Location & WhatsApp Settings</h3>
-      <label style="font-size:11px; font-weight:700;">Store Name</label>
-      <input type="text" id="admName" class="field-input" oninput="syncAdminForm()" />
-
-      <label style="font-size:11px; font-weight:700;">Store WhatsApp Number (91 + 10-digit mobile number, no + sign)</label>
-      <input type="text" id="admPhone" class="field-input" oninput="syncAdminForm()" />
+      <label style="font-size:11px; font-weight:700;">Store WhatsApp Number (with 91)</label>
+      <input type="text" id="admPhone" class="inp" oninput="refreshAdminCode()" />
 
       <div style="display:flex; gap:8px;">
-        <div style="flex:1;">
-          <label style="font-size:11px; font-weight:700;">Shop Latitude</label>
-          <input type="number" step="any" id="admLat" class="field-input" oninput="syncAdminForm()" />
-        </div>
-        <div style="flex:1;">
-          <label style="font-size:11px; font-weight:700;">Shop Longitude</label>
-          <input type="number" step="any" id="admLng" class="field-input" oninput="syncAdminForm()" />
-        </div>
+        <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Shop Lat</label><input type="number" step="any" id="admLat" class="inp" oninput="refreshAdminCode()" /></div>
+        <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Shop Lng</label><input type="number" step="any" id="admLng" class="inp" oninput="refreshAdminCode()" /></div>
       </div>
-
-      <button
-        type="button"
-        onclick="captureShopGpsForAdmin()"
-        style="width:100%; background:#059669; color:#fff; border:none; padding:10px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:10px;"
-      >
-        📍 Set My Current Phone GPS as Shop Location
-      </button>
+      <button type="button" onclick="setShopGps()" style="width:100%; background:#059669; color:#fff; border:none; padding:9px; border-radius:8px; font-size:12px; font-weight:800; margin-bottom:10px; cursor:pointer;">📍 Use My Current Phone GPS as Shop Location</button>
 
       <div style="display:flex; gap:8px;">
-        <div style="flex:1;">
-          <label style="font-size:11px; font-weight:700;">Delivery Radius (km)</label>
-          <input type="number" step="0.1" id="admRadius" class="field-input" oninput="syncAdminForm()" />
-        </div>
-        <div style="flex:1;">
-          <label style="font-size:11px; font-weight:700;">Min Order Value (₹)</label>
-          <input type="number" id="admMinOrder" class="field-input" oninput="syncAdminForm()" />
-        </div>
+        <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Radius (km)</label><input type="number" step="0.1" id="admRad" class="inp" oninput="refreshAdminCode()" /></div>
+        <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Min Order (₹)</label><input type="number" id="admMin" class="inp" oninput="refreshAdminCode()" /></div>
       </div>
+      <label style="font-size:11px; font-weight:700;">Shop Address</label>
+      <input type="text" id="admAddr" class="inp" oninput="refreshAdminCode()" />
 
-      <label style="font-size:11px; font-weight:700;">Shop Display Address</label>
-      <input type="text" id="admAddr" class="field-input" oninput="syncAdminForm()" />
-
-      <hr style="margin: 16px 0; border: none; border-top: 1px solid #e5e7eb;" />
-
-      <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 8px;">2. Add New Product</h3>
-      <div style="background:#f9fafb; padding:12px; border-radius:10px; border:1px solid #e5e7eb; margin-bottom:14px;">
-        <input type="text" id="admNewName" class="field-input" placeholder="Product Name (e.g. Fortune Chana Besan)" />
-        <div style="display:flex; gap:8px;"  </style>
-</head>
-<body>
-
-  <!-- ==========================================================
-       1. TOP HEADER (TAP LOGO 5 TIMES FOR ISOLATED ADMIN PANEL)
-       ========================================================== -->
-  <header class="top-header">
-    <div class="header-row">
-      <div class="brand-box" onclick="handleLogoTap()">
-        <div class="brand-name">
-          <span id="uiStoreTitle">Weaverly Express</span>
-          <span class="fast-pill">1 KM ONLY</span>
-        </div>
-        <div class="brand-sub" id="uiStoreSub">Local Dry Goods & Staples • Min Order ₹499</div>
+      <hr style="margin:12px 0; border:0; border-top:1px solid #e5e7eb;" />
+      <h4 style="font-size:13px; font-weight:900; margin-bottom:6px;">Add Product</h4>
+      <input type="text" id="newPName" class="inp" placeholder="Product Name (e.g. Fortune Besan)" />
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="newPCat" class="inp" placeholder="Category (e.g. Staples)" />
+        <input type="text" id="newPUnit" class="inp" placeholder="Unit (e.g. 1 kg)" />
       </div>
-
-      <button type="button" class="header-cart-btn" onclick="toggleCart(true)">
-        <span>🛒 Cart</span>
-        <span id="uiTopCount">0</span>
-      </button>
-    </div>
-
-    <div class="search-box">
-      <input
-        type="text"
-        id="searchBox"
-        class="search-input"
-        placeholder="Search rice, atta, dal, oil, spices, dry fruits..."
-        onkeyup="onSearchChange()"
-      />
-    </div>
-  </header>
-
-  <!-- ==========================================================
-       2. LIVE GPS STATUS BAR
-       ========================================================== -->
-  <div class="gps-banner">
-    <div class="gps-banner-inner">
-      <div class="gps-status-left">
-        <span id="uiGpsDot" class="status-dot"></span>
-        <span id="uiGpsText">Step 1: Verify you are within 1 km of store</span>
+      <div style="display:flex; gap:6px;">
+        <input type="number" id="newPPrice" class="inp" placeholder="Price ₹" />
+        <input type="number" id="newPMrp" class="inp" placeholder="MRP ₹" />
+        <input type="text" id="newPEmoji" class="inp" placeholder="🌾" style="max-width:70px;" />
       </div>
-      <button type="button" id="uiGpsBtn" class="btn-detect-gps" onclick="detectCustomerGps()">
-        📍 Verify My GPS Location
-      </button>
+      <input type="text" id="newPImg" class="inp" placeholder="Image URL (optional)" />
+      <button type="button" onclick="adminAddProd()" style="width:100%; background:#6d28d9; color:#fff; border:none; padding:9px; border-radius:8px; font-size:12px; font-weight:800; margin-bottom:12px; cursor:pointer;">+ Add Product</button>
+
+      <div id="admProdList" style="max-height:160px; overflow-y:auto; margin-bottom:12px;"></div>
+
+      <h4 style="font-size:12px; font-weight:900;">Copy & Replace `STORE_DATA` in GitHub `index.html`:</h4>
+      <textarea id="admCodeBox" class="code-area" readonly></textarea>
+      <button type="button" onclick="copyAdminCode()" style="width:100%; background:#1e1b4b; color:#fff; border:none; padding:11px; border-radius:8px; font-size:13px; font-weight:900; margin-top:8px; cursor:pointer;">📋 Copy Code for GitHub</button>
     </div>
-  </div>
+  </section>
 
-  <!-- ==========================================================
-       3. MAIN STOREFRONT
-       ========================================================== -->
-  <main class="main-wrap">
-    <!-- Minimum Order Progress -->
-    <div class="mov-card">
-      <div class="mov-row">
-        <span id="uiMovLabel">Add ₹499 more to unlock delivery</span>
-        <span id="uiMovNumbers">₹0 / ₹499</span>
-      </div>
-      <div class="mov-track">
-        <div id="uiMovFill" class="mov-fill"></div>
-      </div>
-    </div>
-
-    <!-- Category Buttons -->
-    <div id="uiCategories" class="cat-bar"></div>
-
-    <!-- Products Grid -->
-    <div id="uiProductsGrid" class="products-grid"></div>
-
-    <!-- Subtle Footer with Admin Trigger -->
-    <div style="text-align: center; margin-top: 28px; font-size: 11px; color: #9ca3af;">
-      <p id="uiFooterText">© 2026 Weaverly Express • 1 km Hyperlocal Store</p>
-      <button
-        type="button"
-        onclick="openAdminLogin()"
-        style="margin-top:6px; background:none; border:none; color:#9ca3af; font-size:11px; text-decoration:underline; cursor:pointer;"
-      >
-        Store Owner Login (Admin)
-      </button>
-    </div>
-  </main>
-
-  <!-- ==========================================================
-       4. STICKY BOTTOM BAR
-       ========================================================== -->
-  <div class="bottom-bar">
-    <div class="bottom-inner">
-      <div>
-        <div style="font-size: 11px; color: #6b7280; font-weight: 800;" id="uiBottomItems">0 ITEMS</div>
-        <div style="font-size: 18px; font-weight: 900;" id="uiBottomTotal">₹0</div>
-      </div>
-      <button type="button" class="btn-open-checkout" onclick="toggleCart(true)">
-        View Cart & Order →
-      </button>
-    </div>
-  </div>
-
-  <!-- ==========================================================
-       5. CUSTOMER GPS WELCOME POPUP (ENSURES BROWSER ASKS FOR GPS)
-       ========================================================== -->
-  <div id="gpsPromptModal" class="overlay-modal">
-    <div class="modal-box" style="max-width: 380px; text-align: center; padding: 20px;">
-      <div style="font-size: 42px; margin-bottom: 8px;">📍</div>
-      <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">Check 1 km Delivery Eligibility</h3>
-      <p style="font-size: 13px; color: #4b5563; margin-bottom: 16px;">
-        We deliver within a <strong>1.0 km radius</strong> of our store hub (<span id="uiPopupAddress">Yamuna Vihar</span>) with a minimum order of <strong>₹499</strong>.
-      </p>
-      <button
-        type="button"
-        onclick="startGpsFromPopup()"
-        style="width:100%; background:#6d28d9; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px;"
-      >
-        📍 Tap to Allow GPS Location
-      </button>
-      <button
-        type="button"
-        onclick="closeGpsPopup()"
-        style="width:100%; background:#f3f4f6; color:#4b5563; border:none; padding:10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"
-      >
-        See Products First
-      </button>
-    </div>
-  </div>
-
-  <!-- ==========================================================
-       6. CART & WHATSAPP CHECKOUT MODAL
-       ========================================================== -->
-  <div id="cartModal" class="overlay-modal">
+    <!-- CHECKOUT MODAL (PERMANENTLY SAVES NAME, PHONE & ADDRESS) -->
+  <div id="modalCheckout" class="modal-bg">
     <div class="modal-box">
       <div class="modal-head">
-        <span>Your Cart & Checkout</span>
-        <button type="button" class="modal-close" onclick="toggleCart(false)">✕</button>
+        <span>Your Basket & One-Tap Order</span>
+        <button type="button" onclick="toggleCheckoutModal(false)" style="border:none; background:#e5e7eb; width:28px; height:28px; border-radius:50%; font-weight:900; cursor:pointer;">✕</button>
       </div>
       <div class="modal-body">
-        <div id="uiCartList" style="margin-bottom: 14px;"></div>
+        <div id="uiBasketItems" style="margin-bottom:12px;"></div>
 
-        <div style="margin-bottom: 12px;">
-          <div style="font-size: 11px; font-weight: 800; color: #6b7280; text-transform: uppercase; margin-bottom: 6px;">
-            Customer Delivery Address
-          </div>
-          <input type="text" id="inCustName" class="input-field" placeholder="Your Full Name *" />
-          <input type="tel" id="inCustPhone" class="input-field" placeholder="Your 10-Digit Mobile Number *" />
-          <input type="text" id="inCustAddr" class="input-field" placeholder="House/Flat No., Gali/Block, Area *" />
-          <input type="text" id="inCustLandmark" class="input-field" placeholder="Nearby Landmark (Optional)" />
+        <div style="background:#f5f3ff; padding:10px; border-radius:10px; border:1px solid #ddd6fe; margin-bottom:10px;">
+          <div style="font-size:11px; font-weight:800; color:#5b21b6; margin-bottom:6px;">📌 YOUR DETAILS (AUTO-SAVED ON DEVICE)</div>
+          <input type="text" id="custName" class="inp" placeholder="Your Full Name *" oninput="saveUserData()" />
+          <input type="tel" id="custPhone" class="inp" placeholder="10-Digit Mobile Number *" oninput="saveUserData()" />
+          <input type="text" id="custAddr" class="inp" placeholder="House/Flat No., Street, Locality *" style="margin-bottom:0;" oninput="saveUserData()" />
         </div>
 
-        <div style="background: #f9fafb; padding: 12px; border-radius: 10px; font-size: 13px; border: 1px solid #e5e7eb;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span>Items Subtotal</span>
-            <strong id="uiBillSub">₹0</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#059669;">
-            <span>Your Total Savings</span>
-            <strong id="uiBillSave">-₹0</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <span>Delivery Charge (Within 1 km)</span>
-            <strong style="color:#059669;">FREE</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:900; border-top:1px solid #d1d5db; padding-top:6px;">
-            <span>Total Payable</span>
-            <span id="uiBillGrand">₹0</span>
+        <div style="background:#f9fafb; padding:10px; border-radius:10px; font-size:13px; border:1px solid #e5e7eb;">
+          <div style="display:flex; justify-content:space-between;"><span>Items Total</span><strong id="uiBillSub">₹0</strong></div>
+          <div style="display:flex; justify-content:space-between; color:#059669;"><span>Total Savings</span><strong id="uiBillSave">-₹0</strong></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:900; border-top:1px solid #d1d5db; margin-top:6px; padding-top:6px;">
+            <span>To Pay</span><span id="uiBillGrand">₹0</span>
           </div>
         </div>
 
-        <div id="uiCheckoutStatusBox" style="margin-top:10px; padding:10px; border-radius:8px; font-size:12px; font-weight:800; text-align:center;"></div>
-
-        <button type="button" id="uiBtnWhatsapp" class="btn-wa-order locked" onclick="sendOrderToWhatsApp()">
-          1-Click Order on WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================
-       7. ISOLATED ADMIN PANEL (PASSWORD PROTECTED FOR STORE OWNER)
-       ========================================================== -->
-  <div id="adminModal" class="overlay-modal">
-    <div class="modal-box" style="max-width: 600px;">
-      <div class="modal-head" style="background: #1e1b4b; color: #fff;">
-        <span>🔒 Isolated Store Admin Panel</span>
-        <button type="button" class="modal-close" onclick="closeAdminModal()">✕</button>
-      </div>
-      <div class="modal-body">
-        <!-- Step A: PIN Screen -->
-        <div id="adminPinView">
-          <p style="font-size: 13px; margin-bottom: 10px; color: #374151;">
-            Enter your Store Owner Admin PIN to edit store mobile number, GPS coordinates, or product catalog.
-          </p>
-          <input type="password" id="inAdminPin" class="input-field" placeholder="Enter Admin PIN (Default: 1234)" />
-          <button
-            type="button"
-            onclick="verifyAdminPin()"
-            style="width:100%; background:#1e1b4b; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:800; cursor:pointer;"
-          >
-            Unlock Admin Panel
-          </button>
-        </div>
-
-        <!-- Step B: Full Store & Product Editor (Hidden until PIN verified) -->
-        <div id="adminEditorView" style="display: none;">
-          <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:10px; border-radius:8px; font-size:12px; color:#1e3a8a; margin-bottom:12px;">
-            <strong>How GitHub Pages Admin Works:</strong> Edit your store settings or products below. Click <strong>"Save & Download Updated index.html"</strong> to get your updated website file ready to upload to GitHub!
-          </div>
-
-          <h4 style="font-size: 13px; font-weight: 900; margin-bottom: 6px;">1. Store Mobile Number & Location</h4>
-          <label style="font-size:11px; font-weight:700;">Store Name</label>
-          <input type="text" id="admStoreName" class="input-field" />
-
-          <label style="font-size:11px; font-weight:700;">WhatsApp Mobile Number (With 91, no + sign)</label>
-          <input type="text" id="admPhone" class="input-field" placeholder="e.g. 919876543210" />
-
-          <div style="display:flex; gap:8px;">
-            <div style="flex:1;">
-              <label style="font-size:11px; font-weight:700;">Store Latitude</label>
-              <input type="number" step="any" id="admLat" class="input-field" />
-            </div>
-            <div style="flex:1;">
-              <label style="font-size:11px; font-weight:700;">Store Longitude</label>
-              <in     display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Modals & Cart Drawer */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      z-index: 60;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .drawer-sheet {
-      background: #fff;
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
-      border-radius: 20px 20px 0 0;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .drawer-header {
-      padding: 14px 16px;
-      background: #f8fafc;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .close-btn {
-      background: #e2e8f0;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .drawer-body {
-      padding: 16px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .cart-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f5f9;
-      gap: 10px;
-    }
-
-    .form-group {
-      margin-top: 12px;
-    }
-    .form-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .form-input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 8px;
-      outline: none;
-    }
-    .form-input:focus {
-      border-color: var(--primary);
-    }
-
-    .whatsapp-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .whatsapp-btn.enabled {
-      background: #16a34a;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
-    }
-    .whatsapp-btn.disabled {
-      background: #e2e8f0;
-      color: #64748b;
-      cursor: not-allowed;
-    }
-
-    /* Location Welcome Prompt Card */
-    .gps-modal-card {
-      background: #fff;
-      width: 92%;
-      max-width: 400px;
-      border-radius: 20px;
-      padding: 22px 18px;
-      text-align: center;
-      margin: auto;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- =========================================================
-       TOP HEADER & SEARCH
-       ========================================================= -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="header-top">
-        <div>
-          <div class="brand-title">
-            <span id="uiStoreName">Weaverly Express</span>
-            <span class="brand-badge">1 KM ZONE</span>
-          </div>
-          <div class="brand-tagline" id="uiStoreTagline">Ultra-Fast Local Dry Goods & Staples</div>
-        </div>
-        <button type="button" class="cart-top-btn" onclick="openCartModal(true)">
-          <span>🛒 Cart</span>
-          <span class="cart-badge" id="topCartCount">0</span>
-        </button>
-      </div>
-
-      <div class="search-wrap">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Search rice, atta, dal, oil, spices..."
-          oninput="handleSearch(this.value)"
-        />
-      </div>
-    </div>
-  </header>
-
-  <!-- =========================================================
-       LIVE GPS STATUS BAR
-       ========================================================= -->
-  <div class="loc-bar">
-    <div class="loc-bar-inner">
-      <div class="loc-status">
-        <span id="locDot" class="dot dot-amber"></span>
-        <span id="locText">Location required (Max 1 km radius)</span>
-      </div>
-      <button type="button" id="locActionBtn" class="gps-btn" onclick="triggerGpsCheck()">
-        📍 Tap to Detect GPS
-      </button>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       MAIN CONTENT AREA
-       ========================================================= -->
-  <main class="container">
-    <!-- Minimum Order Progress -->
-    <div class="min-order-card">
-      <div class="min-order-top">
-        <span id="minOrderHeadline">Add ₹499 more for Free Delivery</span>
-        <span id="minOrderNumbers">₹0 / ₹499</span>
-      </div>
-      <div class="progress-track">
-        <div id="minOrderBar" class="progress-fill"></div>
-      </div>
-    </div>
-
-    <!-- Category Pills -->
-    <div id="categoryList" class="cat-scroll"></div>
-
-    <!-- Product Section Header -->
-    <div class="section-head">
-      <h2 class="section-title" id="sectionTitle">All Products</h2>
-      <span class="section-count" id="productCountText">0 items</span>
-    </div>
-
-    <!-- Product Cards Grid -->
-    <div id="productGrid" class="product-grid">
-      <div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: #64748b;">
-        Loading products...
-      </div>
-    </div>
-  </main>
-
-  <!-- =========================================================
-       STICKY BOTTOM BAR
-       ========================================================= -->
-  <div class="bottom-bar">
-    <div class="bottom-bar-inner">
-      <div>
-        <div style="font-size: 11px; color: var(--muted); font-weight: 700;" id="bottomItemCount">0 ITEMS IN CART</div>
-        <div style="font-size: 18px; font-weight: 900;" id="bottomTotalText">₹0</div>
-      </div>
-      <button type="button" class="checkout-main-btn" onclick="openCartModal(true)">
-        <span>Proceed to Order</span>
-        <span>→</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       CART & WHATSAPP CHECKOUT DRAWER
-       ========================================================= -->
-  <div id="cartModal" class="modal-backdrop">
-    <div class="drawer-sheet">
-      <div class="drawer-header">
-        <div>
-          <div style="font-size: 16px; font-weight: 900;">Your Order Basket</div>
-          <div style="font-size: 11px; color: var(--muted);" id="drawerStoreAddr">Store Hub</div>
-        </div>
-        <button type="button" class="close-btn" onclick="openCartModal(false)">✕</button>
-      </div>
-
-      <div class="drawer-body">
-        <!-- Cart Items -->
-        <div id="cartItemsContainer"></div>
-
-        <!-- Customer Delivery Form -->
-        <div class="form-group">
-          <label class="form-label">Delivery Details (Within 1 km of Store)</label>
-          <input type="text" id="custName" class="form-input" placeholder="Your Full Name *" />
-          <input type="tel" id="custPhone" class="form-input" placeholder="Your 10-Digit Mobile Number *" />
-          <input type="text" id="custAddress" class="form-input" placeholder="House / Flat No., Street, Block *" />
-          <input type="text" id="custLandmark" class="form-input" placeholder="Nearby Landmark (Optional)" />
-        </div>
-
-        <!-- Bill Summary -->
-        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: 8px; font-size: 13px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span>Items Total</span>
-            <strong id="billSubtotal">₹0</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px; color: var(--green);">
-            <span>Total Savings on MRP</span>
-            <strong id="billSavings">-₹0</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <span>1 km Express Delivery</span>
-            <strong style="color: var(--green);">FREE</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:900; border-top:1px solid #e2e8f0; padding-top:6px;">
-            <span>Grand Total</span>
-            <span id="billGrandTotal">₹0</span>
-          </div>
-        </div>
-
-        <!-- Location Check inside Cart -->
-        <div id="cartLocNotice" style="margin-top: 10px; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; text-align: center;"></div>
-
-        <!-- 1-Click WhatsApp Button -->
-        <button type="button" id="whatsappSubmitBtn" class="whatsapp-btn disabled" onclick="submitOrderToWhatsApp()">
-          1-Click Order on WhatsApp
-        </button>
+        <button type="button" id="btnWaSend" class="btn-wa locked" onclick="sendWhatsAppOrder()">🟢 One-Tap Order on WhatsApp</button>
       </div>
     </div>
   </div>
 
   <!-- =========================================================
-       INITIAL LOCATION PROMPT MODAL (FORCES BROWSER GPS POPUP)
+       PART 1: STORE DATA (PASTE GENERATED ADMIN CODE HERE)
        ========================================================= -->
-  <div id="gpsWelcomeModal" class="modal-backdrop" style="align-items: center;">
-    <div class="gps-modal-card">
-      <div style="font-size: 40px; margin-bottom: 8px;">📍</div>
-      <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">Verify 1 km Delivery Zone</h3>
-      <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">
-        We deliver ultra-fast within <strong>1.0 km</strong> of our store hub (<span id="modalStoreAddr">Yamuna Vihar</span>) on orders above <strong>₹499</strong>.
-      </p>
-      <button
-        type="button"
-        onclick="acceptGpsModal()"
-        style="width:100%; background:var(--primary); color:#fff; border:none; padding:13px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:8px;"
-      >
-        📍 Allow Live GPS Location
-      </button>
-      <button
-        type="button"
-        onclick="closeGpsModal()"
-        style="width:100%; background:#f1f5f9; color:var(--muted); border:none; padding:10px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;"
-      >
-        Browse Products First
-      </button>
-    </div>
-  </div>
+  <script>
+    /* === START_STORE_DATA === */
+    var STORE_DATA = {
+      name: "Weaverly Express",
+      whatsappNumber: "919876543210",
+      storeLat: 28.6924,
+      storeLng: 77.2736,
+      storeAddress: "Block C, Yamuna Vihar, Delhi 110053",
+      maxRadiusKm: 1.5,
+      minOrderValue: 499,
+      products: [
+        { id: 1, name: "India Gate Basmati Rice", category: "Rice & Atta", unit: "5 kg", price: 460, mrp: 540, emoji: "🌾", image: "" },
+        { id: 2, name: "Aashirvaad Chakki Atta", category: "Rice & Atta", unit: "5 kg", price: 245, mrp: 275, emoji: "🌾", image: "" },
+        { id: 3, name: "Unpolished Toor Dal", category: "Dal & Pulses", unit: "1 kg", price: 165, mrp: 195, emoji: "🫘", image: "" },
+        { id: 4, name: "Yellow Moong Dal", category: "Dal & Pulses", unit: "1 kg", price: 135, mrp: 160, emoji: "🫘", image: "" },
+        { id: 5, name: "White Kabuli Chana", category: "Dal & Pulses", unit: "1 kg", price: 155, mrp: 185, emoji: "🫘", image: "" },
+        { id: 6, name: "Kachi Ghani Mustard Oil", category: "Oil & Ghee", unit: "1 Litre", price: 185, mrp: 220, emoji: "🍾", image: "" },
+        { id: 7, name: "Pure Desi Cow Ghee", category: "Oil & Ghee", unit: "500 ml", price: 345, mrp: 399, emoji: "🧈", image: "" },
+        { id: 8, name: "Fortune Sunflower Oil", category: "Oil & Ghee", unit: "1 Litre", price: 145, mrp: 170, emoji: "🌻", image: "" },
+        { id: 9, name: "Kashmiri Lal Mirch", category: "Spices", unit: "200 g", price: 88, mrp: 115, emoji: "🌶️", image: "" },
+        { id: 10, name: "Tata Salt Vacuum Pack", category: "Spices", unit: "1 kg", price: 27, mrp: 30, emoji: "🧂", image: "" },
+        { id: 11, name: "California Almonds", category: "Dry Fruits", unit: "500 g", price: 420, mrp: 525, emoji: "🌰", image: "" },
+        { id: 12, name: "Whole Cashews (Kaju)", category: "Dry Fruits", unit: "500 g", price: 450, mrp: 550, emoji: "🥜", image: "" }
+      ]
+    };
+    /* === END_STORE_DATA === */
+  </script>
+  <!-- =========================================================
+       PART 2: APPLICATION ENGINE
+       ========================================================= -->
+  <script>
+    var KEY_USER = "wv_user_perm_v2";
+    var KEY_CART = "wv_cart_perm_v2";
+    var cart = {};
+    var curCat = "All";
+    var tapCnt = 0;
+    var deferredPwa = null;
+    var user = { name: "", phone: "", addr: "", lat: null, lng: null, dist: null };
 
-  <!-- ========================================
-    // 3. HAVERSINE DISTANCE CALCULATION
-    // ==========================================
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Earth's radius in kilometers
-      const dLat = (lat2 - lat1) * (Math.PI / 180);
-      const dLon = (lon2 - lon1) * (Math.PI / 180);
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
+    window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); deferredPwa = e; });
+
+    function installAppPrompt() {
+      if (deferredPwa) { deferredPwa.prompt(); }
+      else { alert("To install Weaverly App:\n\n1. Tap the 3-dots menu (⋮) at top-right of Chrome.\n2. Tap 'Add to Home screen' or 'Install app'."); }
     }
 
-    // ==========================================
-    // 4. GPS & LOCATION DETECTION
-    // ==========================================
-    function requestUserLocation() {
-      const statusIcon = document.getElementById("locStatusIcon");
-      const statusText = document.getElementById("locStatusText");
-      const retryBtn = document.getElementById("btnRetryLoc");
+    function calcDistKm(lat1, lon1, lat2, lon2) {
+      var R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
 
-      if (!navigator.geolocation) {
-        statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
-        statusText.textContent = "GPS not supported on your browser.";
-        userLocation.isVerified = false;
-        validateCheckoutState();
-        return;
+    function loadSaved() {
+      try {
+        var u = JSON.parse(localStorage.getItem(KEY_USER));
+        if (u) { user.name = u.name || ""; user.phone = u.phone || ""; user.addr = u.addr || ""; user.lat = u.lat; user.lng = u.lng; }
+        var c = JSON.parse(localStorage.getItem(KEY_CART));
+        if (c) cart = c;
+      } catch (e) {}
+    }
+
+    function saveUserData() {
+      user.name = document.getElementById("custName").value.trim();
+      user.phone = document.getElementById("custPhone").value.trim();
+      user.addr = document.getElementById("custAddr").value.trim();
+      try { localStorage.setItem(KEY_USER, JSON.stringify(user)); } catch (e) {}
+      document.getElementById("uiUserGreet").textContent = user.name ? "• Hi, " + user.name : "";
+    }
+
+    function routeByLocation() {
+      if (typeof user.lat === "number" && typeof user.lng === "number") {
+        user.dist = calcDistKm(STORE_DATA.storeLat, STORE_DATA.storeLng, user.lat, user.lng);
+        if (user.dist <= STORE_DATA.maxRadiusKm) {
+          document.getElementById("secLocationGate").classList.add("hidden");
+          document.getElementById("secNotServiceable").classList.add("hidden");
+          document.getElementById("secStorefront").classList.remove("hidden");
+          document.getElementById("uiDistBadge").textContent = user.dist.toFixed(2);
+          renderCategories();
+          renderProducts();
+          updateCartUI();
+        } else {
+          document.getElementById("secLocationGate").classList.add("hidden");
+          document.getElementById("secStorefront").classList.add("hidden");
+          document.getElementById("secNotServiceable").classList.remove("hidden");
+          document.getElementById("uiFarDist").textContent = user.dist.toFixed(2);
+          document.getElementById("uiFarAddr").textContent = STORE_DATA.storeAddress;
+          document.getElementById("uiFarMax").textContent = STORE_DATA.maxRadiusKm;
+        }
+      } else {
+        document.getElementById("secLocationGate").classList.remove("hidden");
+        document.getElementById("secNotServiceable").classList.add("hidden");
+        document.getElementById("secStorefront").classList.add("hidden");
       }
-
-      statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
-      statusText.textContent = "Requesting your live GPS...";
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const dist = calculateDistance(STORE_CONFIG.storeLat, STORE_CONFIG.storeLng, lat, lng);
-
-          userLocation.lat = lat;
-          userLocation.lng = lng;
-          userLocation.distanceKm = dist;
-          userLocation.isVerified = true;
-          userLocation.errorMsg = null;
-
-          if (dist <= STORE_CONFIG.maxDeliveryRadiusKm) {
-            statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-emerald-500";
-            statusText.textContent = `In Delivery Zone (${dist.toFixed(2)} km from store)`;
-            if (retryBtn) retryBtn.classList.add("hidden");
-          } else {
-            statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
-            statusText.textContent = `Out of Range (${dist.toFixed(2)} km away, max is ${STORE_CONFIG.maxDeliveryRadiusKm} km)`;
-            if (retryBtn) retryBtn.classList.remove("hidden");
-          }
-          validateCheckoutState();
-        },
-        (error) => {
-          userLocation.isVerified = false;
-          statusIcon.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
-          if (error.code === error.PERMISSION_DENIED) {
-            statusText.textContent = "Location permission denied. Click 'Enable GPS'.";
-          } else {
-            statusText.textContent = "Unable to get GPS location. Click 'Enable GPS'.";
-          }
-          if (retryBtn) retryBtn.classList.remove("hidden");
-          validateCheckoutState();
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
     }
 
-    // ==========================================
-    // 5. RENDER PRODUCTS & CATEGORIES
-    // ==========================================
+  function checkUserGps() {
+      var msg = document.getElementById("uiGpsMsg");
+      var btn = document.getElementById("btnCheckGps");
+      if (!navigator.geolocation) { msg.textContent = "GPS not supported on this browser."; return; }
+      msg.textContent = "Requesting live GPS location...";
+      btn.textContent = "⏳ Detecting GPS...";
+
+      navigator.geolocation.getCurrentPosition(onGpsOk, function() {
+        navigator.geolocation.getCurrentPosition(onGpsOk, onGpsFail, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+      }, { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 });
+    }
+
+    function onGpsOk(pos) {
+      user.lat = pos.coords.latitude;
+      user.lng = pos.coords.longitude;
+      try { localStorage.setItem(KEY_USER, JSON.stringify(user)); } catch (e) {}
+      document.getElementById("btnCheckGps").textContent = "📍 Allow GPS Location & View Products";
+      routeByLocation();
+    }
+
+    function onGpsFail(err) {
+      document.getElementById("btnCheckGps").textContent = "📍 Allow GPS Location & View Products";
+      document.getElementById("uiGpsMsg").textContent = (err && err.code === 1)
+        ? "Location permission denied! Please allow Location access in Chrome site settings."
+        : "Could not detect GPS. Please turn ON your phone's Location and tap above.";
+    }
+
     function renderCategories() {
-      const container = document.getElementById("categoryContainer");
-      if (!container) return;
-
-      const categories = ["All", ...new Set(PRODUCTS.map(p => p.category))];
-      container.innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" 
-          class="category-pill px-4 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition-all shadow-sm ${
-            activeCategory === cat ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }">
-          ${cat}
-        </button>
-      `).join("");
+      var cats = ["All"];
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var c = STORE_DATA.products[i].category;
+        if (cats.indexOf(c) === -1) cats.push(c);
+      }
+      var h = "";
+      for (var j = 0; j < cats.length; j++) {
+        h += '<button type="button" class="cat-btn ' + (cats[j] === curCat ? 'active' : '') + '" onclick="setCat(\'' + cats[j] + '\')">' + cats[j] + '</button>';
+      }
+      document.getElementById("uiCatList").innerHTML = h;
     }
-
-    function filterCategory(cat) {
-      activeCategory = cat;
-      document.getElementById("currentCategoryTitle").textContent = cat === "All" ? "All Products" : cat;
-      renderCategories();
-      renderProducts();
-    }
+function setCat(c) { curCat = c; renderCategories(); renderProducts(); }
 
     function renderProducts() {
-      const grid = document.getElementById("productsGrid");
-      if (!grid) return;
-
-      const filtered = activeCategory === "All" 
-        ? PRODUCTS 
-        : PRODUCTS.filter(p => p.category === activeCategory);
-
-      grid.innerHTML = filtered.map(item => {
-        const qtyInCart = cart[item.id] || 0;
-        const discountPct = Math.round(((item.mrp - item.price) / item.mrp) * 100);
-
-        return `
-          <div class="bg-white border border-gray-100 rounded-2xl p-2.5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between relative">
-            ${discountPct > 0 ? `
-              <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
-                ${discountPct}% OFF
-              </span>
-            ` : ''}
-            
-            <div class="w-full h-28 bg-gray-50 rounded-xl overflow-hidden mb-2">
-              <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/f3f4f6/9ca3af?text=Product'" />
-            </div>
-
-            <div>
-              <p class="text-[11px] text-gray-400 font-medium">${item.unit}</p>
-              <h3 class="text-xs font-bold text-gray-900 line-clamp-1">${item.name}</h3>
-              <div class="flex items-center space-x-1.5 mt-1">
-                <span class="text-xs font-black text-gray-900">₹${item.price}</span>
-                <span class="text-[10px] text-gray-400 line-through">₹${item.mrp}</span>
-              </div>
-            </div>
-
-            <div class="mt-2.5">
-              ${qtyInCart === 0 ? `
-                <button onclick="updateCartItem(${item.id}, 1)" class="w-full py-1.5 border border-brand-600 text-brand-600 hover:bg-brand-50 text-xs font-bold rounded-lg transition-colors">
-                  ADD
-                </button>
-              ` : `
-                <div class="flex items-center justify-between bg-brand-600 text-white rounded-lg p-0.5">
-                  <button onclick="updateCartItem(${item.id}, -1)" class="w-7 py-1 text-sm font-bold flex items-center justify-center hover:bg-brand-700 rounded-md">−</button>
-                  <span class="text-xs font-black">${qtyInCart}</span>
-                  <button onclick="updateCartItem(${item.id}, 1)" class="w-7 py-1 text-sm font-bold flex items-center justify-center hover:bg-brand-700 rounded-md">+</button>
-                </div>
-              `}
-            </div>
-          </div>
-        `;
-      }).join("");
+      var q = (document.getElementById("inSearch").value || "").toLowerCase().trim();
+      var h = "";
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var p = STORE_DATA.products[i];
+        if ((curCat === "All" || p.category === curCat) && (!q || p.name.toLowerCase().indexOf(q) !== -1)) {
+          var qty = cart[p.id] || 0;
+          var off = p.mrp > p.price ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
+          h += '<div class="p-card">';
+          if (off > 0) h += '<span class="p-off">' + off + '% OFF</span>';
+          h += '<div><div class="p-img">' + (p.image ? '<img src="' + p.image + '" alt="">' : (p.emoji || '🛍️')) + '</div>';
+          h += '<span class="p-unit">' + p.unit + '</span><div class="p-name">' + p.name + '</div></div>';
+          h += '<div class="p-foot"><div><span class="p-price">₹' + p.price + '</span>' + (p.mrp > p.price ? '<span class="p-mrp">₹' + p.mrp + '</span>' : '') + '</div>';
+          if (qty === 0) h += '<button type="button" class="btn-add" onclick="modCart(' + p.id + ',1)">ADD</button>';
+          else h += '<div class="qty-box"><button type="button" class="qty-btn" onclick="modCart(' + p.id + ',-1)">−</button><span class="qty-num">' + qty + '</span><button type="button" class="qty-btn" onclick="modCart(' + p.id + ',1)">+</button></div>';
+          h += '</div></div>';
+        }
+      }
+      document.getElementById("uiProdGrid").innerHTML = h || '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#6b7280;">No items found.</div>';
     }
 
-    // ==========================================
-    // 6. CART MANAGEMENT
-    // ==========================================
-    function updateCartItem(id, change) {
-      const current = cart[id] || 0;
-      const next = current + change;
-      if (next <= 0) {
-        delete cart[id];
-      } else {
-        cart[id] = next;
-      }
+    function modCart(id, d) {
+      var n = (cart[id] || 0) + d;
+      if (n <= 0) delete cart[id]; else cart[id] = n;
+      try { localStorage.setItem(KEY_CART, JSON.stringify(cart)); } catch (e) {}
       renderProducts();
-      renderCartDrawer();
-      updateBadgesAndTotals();
+      updateCartUI();
     }
 
-    function calculateSubtotal() {
-      let total = 0;
-      for (const [id, qty] of Object.entries(cart)) {
-        const item = PRODUCTS.find(p => p.id == id);
-        if (item) total += item.price * qty;
+    function getTotals() {
+      var cnt = 0, sub = 0, mrp = 0;
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var p = STORE_DATA.products[i], q = cart[p.id] || 0;
+        if (q > 0) { cnt += q; sub += p.price * q; mrp += (p.mrp || p.price) * q; }
       }
-      return total;
+      return { cnt: cnt, sub: sub, save: Math.max(0, mrp - sub) };
     }
 
-    function updateBadgesAndTotals() {
-      const count = Object.values(cart).reduce((a, b) => a + b, 0);
-      const subtotal = calculateSubtotal();
+    function updateCartUI() {
+      var t = getTotals(), min = STORE_DATA.minOrderValue, rem = Math.max(0, min - t.sub);
+      document.getElementById("uiCartCount").textContent = t.cnt + " ITEMS";
+      document.getElementById("uiCartTotal").textContent = "₹" + t.sub;
+      document.getElementById("uiMovAmt").textContent = "₹" + t.sub + " / ₹" + min;
+      var bar = document.getElementById("uiMovBar");
+      bar.style.width = Math.min(100, Math.round((t.sub / min) * 100)) + "%";
+      bar.className = rem === 0 ? "mov-fill ok" : "mov-fill";
+      document.getElementById("uiMovTitle").textContent = rem > 0 ? "Add ₹" + rem + " more to reach ₹" + min + " min order" : "✓ Minimum order of ₹" + min + " unlocked!";
 
-      document.getElementById("headerCartCount").textContent = count;
-      document.getElementById("bottomBarBadge").textContent = count;
-      document.getElementById("bottomBarTotal").textContent = `₹${subtotal}`;
-
-      // Minimum order status banner
-      const diff = STORE_CONFIG.minOrderValue - subtotal;
-      const bannerDiff = document.getElementById("minOrderDiffText");
-      if (diff > 0) {
-        bannerDiff.textContent = `Add ₹${diff} more`;
-        bannerDiff.className = "font-bold text-brand-600";
-      } else {
-        bannerDiff.textContent = "Minimum met! Ready to deliver";
-        bannerDiff.className = "font-bold text-emerald-600";
+      var bh = "";
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var p = STORE_DATA.products[i], q = cart[p.id] || 0;
+        if (q > 0) {
+          bh += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:13px;">';
+          bh += '<div><strong>' + p.name + '</strong> (' + p.unit + ')<br><span style="color:#6b7280;font-size:11px;">₹' + p.price + ' × ' + q + ' = ₹' + (p.price * q) + '</span></div>';
+          bh += '<div class="qty-box"><button type="button" class="qty-btn" onclick="modCart(' + p.id + ',-1)">−</button><span class="qty-num">' + q + '</span><button type="button" class="qty-btn" onclick="modCart(' + p.id + ',1)">+</button></div></div>';
+        }
       }
+      document.getElementById("uiBasketItems").innerHTML = bh || '<div style="text-align:center;color:#6b7280;padding:12px;">Basket is empty</div>';
+      document.getElementById("uiBillSub").textContent = "₹" + t.sub;
+      document.getElementById("uiBillSave").textContent = "-₹" + t.save;
+      document.getElementById("uiBillGrand").textContent = "₹" + t.sub;
 
-      validateCheckoutState();
+      var waBtn = document.getElementById("btnWaSend");
+      if (t.sub >= min) {
+        waBtn.className = "btn-wa ready";
+        waBtn.textContent = "🟢 One-Tap Order on WhatsApp (₹" + t.sub + ")";
+      } else {
+        waBtn.className = "btn-wa locked";
+        waBtn.textContent = "Add ₹" + rem + " More (Min Order ₹" + min + ")";
+      }
     }
 
-    function renderCartDrawer() {
-      const list = document.getElementById("cartItemList");
-      const itemsInCart = Object.entries(cart);
+    function toggleCheckoutModal(open) {
+      updateCartUI();
+      document.getElementById("modalCheckout").classList.toggle("open", open);
+    }
 
-      if (itemsInCart.length === 0) {
-        list.innerHTML = `
-          <div class="h-48 flex flex-col items-center justify-center text-gray-400 space-y-2">
-            <svg class="w-12 h-12 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            <p class="text-xs font-semibold">Your cart is empty</p>
-          </div>
-        `;
+    function sendWhatsAppOrder() {
+      var t = getTotals();
+      if (t.sub < STORE_DATA.minOrderValue) { alert("Minimum order is ₹" + STORE_DATA.minOrderValue); return; }
+      saveUserData();
+      if (!user.name || !user.phone || !user.addr) { alert("Please fill in your Name, Mobile Number, and Address."); return; }
+
+      var lines = [];
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var p = STORE_DATA.products[i], q = cart[p.id] || 0;
+        if (q > 0) lines.push("• " + p.name + " (" + p.unit + ") x " + q + " = ₹" + (p.price * q));
+      }
+      var mapLink = "https://maps.google.com/?q=" + user.lat + "," + user.lng;
+      var txt = "🛒 *NEW ORDER: " + STORE_DATA.name + "*\n" +
+        "*Customer:* " + user.name + "\n*Phone:* " + user.phone + "\n*Address:* " + user.addr + "\n" +
+        "*Distance:* " + (user.dist ? user.dist.toFixed(2) : "0") + " km\n*GPS Map:* " + mapLink + "\n" +
+        "--------------------\n" + lines.join("\n") + "\n--------------------\n*GRAND TOTAL: ₹" + t.sub + "*";
+      window.open("https://wa.me/" + STORE_DATA.whatsappNumber + "?text=" + encodeURIComponent(txt), "_blank");
+    }
+
+    /* ADMIN PANEL FUNCTIONS */
+    function handleSecretAdminTap() {
+      tapCnt++;
+      if (tapCnt >= 5) { tapCnt = 0; openAdminView(); }
+    }
+
+function openAdminView() {
+      document.getElementById("secLocationGate").classList.add("hidden");
+      document.getElementById("secNotServiceable").classList.add("hidden");
+      document.getElementById("secStorefront").classList.add("hidden");
+      document.getElementById("secAdmin").classList.remove("hidden");
+
+      document.getElementById("admPhone").value = STORE_DATA.whatsappNumber;
+      document.getElementById("admLat").value = STORE_DATA.storeLat;
+      document.getElementById("admLng").value = STORE_DATA.storeLng;
+      document.getElementById("admRad").value = STORE_DATA.maxRadiusKm;
+      document.getElementById("admMin").value = STORE_DATA.minOrderValue;
+      document.getElementById("admAddr").value = STORE_DATA.storeAddress;
+      renderAdminList();
+      refreshAdminCode();
+    }
+
+    function setShopGps() {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        document.getElementById("admLat").value = pos.coords.latitude.toFixed(6);
+        document.getElementById("admLng").value = pos.coords.longitude.toFixed(6);
+        refreshAdminCode();
+        alert("Shop GPS captured!");
+      });
+    }
+
+    function renderAdminList() {
+      var h = "";
+      for (var i = 0; i < STORE_DATA.products.length; i++) {
+        var p = STORE_DATA.products[i];
+        h += '<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #e5e7eb;font-size:12px;">';
+        h += '<span>' + p.emoji + ' <strong>' + p.name + '</strong> (' + p.unit + ') - ₹' + p.price + '</span>';
+        h += '<button type="button" onclick="delAdminProd(' + p.id + ')" style="color:#dc2626;border:none;background:none;font-weight:800;cursor:pointer;">Delete</button></div>';
+      }
+      document.getElementById("admProdList").innerHTML = h;
+    }
+
+    function adminAddProd() {
+      var n = document.getElementById("newPName").value.trim();
+      var pr = Number(document.getElementById("newPPrice").value);
+      if (!n || !pr) { alert("Enter Product Name and Price."); return; }
+      STORE_DATA.products.push({
+        id: Date.now(),
+        name: n,
+        category: document.getElementById("newPCat").value.trim() || "Staples",
+        unit: document.getElementById("newPUnit").value.trim() || "1 kg",
+        price: pr,
+        mrp: Number(document.getElementById("newPMrp").value) || pr,
+        emoji: document.getElementById("newPEmoji").value.trim() || "🛍️",
+        image: document.getElementById("newPImg").value.trim()
+      });
+      document.getElementById("newPName").value = "";
+      document.getElementById("newPPrice").value = "";
+      renderAdminList();
+      refreshAdminCode();
+    }
+
+    function delAdminProd(id) {
+      STORE_DATA.products = STORE_DATA.products.filter(function(p) { return p.id !== id; });
+      renderAdminList();
+      refreshAdminCode();
+    }
+
+    function refreshAdminCode() {
+      STORE_DATA.whatsappNumber = document.getElementById("admPhone").value.replace(/[^0-9]/g, "");
+      STORE_DATA.storeLat = parseFloat(document.getElementById("admLat").value) || 0;
+      STORE_DATA.storeLng = parseFloat(document.getElementById("admLng").value) || 0;
+      STORE_DATA.maxRadiusKm = parseFloat(document.getElementById("admRad").value) || 1.5;
+      STORE_DATA.minOrderValue = parseInt(document.getElementById("admMin").value, 10) || 499;
+      STORE_DATA.storeAddress = document.getElementById("admAddr").value.trim();
+      document.getElementById("admCodeBox").value =
+        "/* === START_STORE_DATA === */\nvar STORE_DATA = " + JSON.stringify(STORE_DATA, null, 2) + ";\n/* === END_STORE_DATA === */";
+    }
+
+    function copyAdminCode() {
+      var box = document.getElementById("admCodeBox");
+      box.select();
+      navigator.clipboard.writeText(box.value);
+      alert("Copied! Paste this into Part 1 of your GitHub index.html file.");
+    }
+
+    /* STARTUP */
+    (function init() {
+      document.getElementById("uiStoreName").textContent = STORE_DATA.name;
+      document.getElementById("uiZoneBadge").textContent = STORE_DATA.maxRadiusKm + " KM ZONE";
+      document.getElementById("uiGateRad").textContent = STORE_DATA.maxRadiusKm;
+      document.getElementById("uiGateAddr").textContent = STORE_DATA.storeAddress;
+
+      loadSaved();
+      document.getElementById("custName").value = user.name;
+      document.getElementById("custPhone").value = user.phone;
+      document.getElementById("custAddr").value = user.addr;
+      document.getElementById("uiUserGreet").textContent = user.name ? "• Hi, " + user.name : "";
+
+      if (window.location.search.indexOf("admin=") !== -1) {
+        openAdminView();
       } else {
-        list.innerHTML = itemsInCart.map(([id, qty]) => {
-          const item = PRODUCTS.find(p => p.id == id);
-          if (!item) return '';
-          return `
-            <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-100">
-              <div class="flex items-center space-x-2.5">
-                <img src="${item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://placehold.co/100x100/f3f4f6/9ca3af?text=Item'" />
-                <div>
-                  <h4 class="text-xs font-bold text-gray-900">${item.name}</h4>
-                  <p class="text-[10px] text-gray-500">₹${item.price} x ${qty} = ₹${item.price * qty}</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-1.5 bg-white border border-gray-200 rounded-lg p-0.5">
-                <button onclick="updateCartItem(${item.id}, -1)" class="w-6 h-6 text-xs font-bold flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded">−</button>
-                <span class="text-xs font-black px-1">${qty}</span>
-                <button onclick="updateCartItem(${item.t-slate-950 px-4 py-2.5 shadow-sm">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-full bg-slate-950/15 flex items-center justify-center shrink-0">
-                    <i id="gpsBannerIcon" class="fa-solid fa-location-crosshairs text-slate-950 text-xs"></i>
-                </div>
-                <div>
-                    <p id="gpsBannerTitle" class="text-xs sm:text-sm font-extrabold">Live GPS Verification Required for Instant Delivery</p>
-                    <p id="gpsBannerSub" class="text-[11px] sm:text-xs font-medium opacity-90">We strictly deliver within <span id="bannerMaxRadiusVal">1.0</span> km of <span id="bannerStoreAddress">Main Hub</span>. Tap to verify your live location.</p>
-                </div>
-            </div>
-            <button onclick="requestRealUserGPS()" id="gpsBannerBtn" class="px-3.5 py-1.5 rounded-xl bg-slate-950 text-white font-bold text-xs hover:bg-slate-800 transition shrink-0 flex items-center gap-1.5 self-end sm:self-auto shadow-sm">
-                <i class="fa-solid fa-location-crosshairs text-amber-300"></i>
-                <span>Detect My Live GPS Location</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- ============================================================================ -->
-    <!-- MAIN CONTENT CONTAINER                                                       -->
-    <!-- ============================================================================ -->
-    <main class="max-w-6xl mx-auto px-3 sm:px-6 pt-4 space-y-6">
-
-        <!-- Hero Value Proposition & Minimum Order Strip -->
-        <section class="bg-gradient-to-r from-violet-900 via-purple-800 to-fuchsia-900 rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden">
-            <div class="absolute -right-8 -bottom-10 opacity-10 pointer-events-none">
-                <i class="fa-solid fa-bolt text-[140px]"></i>
-            </div>
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="space-y-1.5 max-w-xl">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 font-extrabold text-[11px] uppercase tracking-wider">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> 1-Click WhatsApp Direct Store
-                    </div>
-                    <h2 class="font-display font-extrabold text-lg sm:text-2xl leading-tight">
-                        Groceries & Daily Essentials at Your Door in <span class="text-amber-300 underline decoration-wavy decoration-amber-400/60" id="heroEtaSpan">30 MINS</span>
-                    </h2>
-                    <p class="text-xs sm:text-sm text-purple-100 leading-relaxed">
-                        Exclusively serving neighborhoods within <strong class="text-white"><span id="heroRadiusSpan">1.0</span> km</strong> of <span id="heroAddressSpan" class="underline decoration-purple-400">Main Hub, Sector B</span>. Zero delivery fees on all orders of <strong class="text-amber-300">₹<span id="heroMinOrderSpan">499</span></strong> or above!
-                    </p>
-                </div>
-
-                <!-- Live Store Policy Pills -->
-                <div class="grid grid-cols-3 gap-2 shrink-0">
-                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
-                        <div class="text-amber-300 font-extrabold text-sm sm:text-base">₹<span id="cardMinOrder">499</span></div>
-                        <div class="text-[10px] text-purple-200 font-medium">Min. Order</div>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
-                        <div class="text-emerald-300 font-extrabold text-sm sm:text-base">≤ <span id="cardMaxRadius">1.0</span> km</div>
-                        <div class="text-[10px] text-purple-200 font-medium">Live GPS Zone</div>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-2.5 text-center">
-                        <div class="text-pink-300 font-extrabold text-sm sm:text-base">FREE</div>
-                        <div class="text-[10px] text-purple-200 font-medium">Delivery</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured / Flash Deals Shelf (Hidden during search or specific category filter) -->
-        <section id="featuredSection" class="space-y-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">
-                        <i class="fa-solid fa-fire-flame-curved"></i>
-                    </span>
-                    <div>
-                        <h3 class="font-display font-extrabold text-base sm:text-lg text-slate-900 leading-none">Super Saver Combos & Bestsellers</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Fastest way to reach your ₹<span class="dyn-min-order">499</span> minimum cart value</p>
-                    </div>
-                </div>
-                <span class="text-xs font-bold text-zepto-700 bg-purple-100 px-2.5 py-1 rounded-full">Swipe →</span>
-            </div>
-
-            <div id="featuredCarousel" class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-                <!-- Dynamically rendered from PRODUCTS -->
-            </div>
-        </section>
-
-        <!-- Main Product Catalog Grid -->
-        <section class="space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
-                <div>
-                    <h3 id="catalogHeading" class="font-display font-extrabold text-base sm:text-xl text-slate-900">All Store Products</h3>
-                    <p id="catalogSubheading" class="text-xs text-slate-500">Fresh stock ready for instant dispatch</p>
-                </div>
-
-                <!-- Sort Filter -->
-                <div class="flex items-center gap-2">
-                    <select id="sortSelect" onchange="handleSortChange(this.value)" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zepto-600">
-                        <option value="featured">Sort: Featured</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="discount">Highest % Off</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Dynamic Product Cards Grid -->
-            <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                <!-- Populated dynamically from PRODUCTS array -->
-            </div>
-
-            <!-- Empty Search State -->
-            <div id="emptyCatalogState" class="hidden bg-white rounded-2xl p-8 text-center border border-slate-200 my-4">
-                <div class="w-14 h-14 rounded-full bg-purple-50 text-zepto-600 flex items-center justify-center mx-auto mb-3 text-2xl">
-                    <i class="fa-solid fa-box-open"></i>
-                </div>
-                <h4 class="font-display font-bold text-base text-slate-800">No matching products found</h4>
-                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Try clearing your search filter or switching to "All" categories.</p>
-                <button onclick="resetCatalogFilters()" class="mt-4 px-4 py-2 bg-zepto-700 text-white text-xs font-bold rounded-xl hover:bg-zepto-800 transition">
-                    Show All Products
-                </button>
-            </div>
-        </section>
-
-        <!-- Minimal Store Footer (Secret 5-tap trigger on copyright text for Store Owner) -->
-        <footer class="pt-8 pb-6 border-t border-slate-200 text-center space-y-1">
-            <p class="text-xs font-bold text-slate-700"><span id="footerStoreName">Weaverly Express</span> • Instant Neighborhood Quick-Commerce</p>
-            <p class="text-[11px] text-slate-500">Orders accepted via WhatsApp within <span id="footerRadius">1.0</span> km radius • Minimum order ₹<span id="footerMinOrder">499</span></p>
-            <p id="secretOwnerTrigger" onclick="handleSecretFooterTap()" class="text-[10px] text-slate-400 pt-2 select-none cursor-default">
-                © 2026 Weaverly Express. All rights reserved.
-            </p>
-        </footer>
-    </main>
-
-    <!-- ============================================================================ -->
-    <!-- STICKY FLOATING BOTTOM ZEPTO CART & ₹499 PROGRESS BAR                        -->
-    <!-- ============================================================================ -->
-    <div id="stickyBottomBar" class="fixed bottom-0 inset-x-0 z-30 p-2.5 sm:p-3 pointer-events-none transition-all duration-300">
-        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden pointer-events-auto">
-            <!-- Dynamic ₹499 Minimum Order Progress Bar Strip -->
-            <div id="bottomMinOrderStrip" class="bg-amber-50 px-3.5 py-2 border-b border-amber-200/70">
-                <div class="flex items-center justify-between text-xs mb-1">
-                    <span id="bottomProgressText" class="font-bold text-amber-900 flex items-center gap-1.5">
-                        <i class="fa-solid fa-lock text-amber-600"></i>
-                        Add ₹499 more to unlock free instant delivery
-                    </span>
-                    <span id="bottomProgressPercent" class="font-extrabold text-amber-700">0%</span>
-                </div>
-                <div class="w-full h-2 bg-amber-200/70 rounded-full overflow-hidden">
-                    <div id="bottomProgressBar" class="h-full bg-gradient-to-r from-amber-500 to-zepto-pink rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- Bottom Cart Action Row -->
-            <div class="bg-zepto-900 text-white px-4 py-3 flex items-center justify-between gap-3">
-               
+        routeByLocation();
+      }
+    })();
+  </script>
+</body>
+</html>
+<!-- END OF FILE -->
+    
+    
+  
+  
+  
