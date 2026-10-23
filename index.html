@@ -3,60 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Weaverly Express | 1 km Instant Delivery</title>
+  <meta name="theme-color" content="#4c1d95" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Weaverly" />
+  <title>Weaverly Express | 1.5 km Instant Delivery</title>
+
   <style>
-    /* ==========================================================
-       ZERO-DEPENDENCY CSS (WORKS OFFLINE & ON ALL MOBILE BROWSERS)
-       ========================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: #f4f6fb;
+      background: #f3f4f6;
       color: #111827;
-      padding-bottom: 110px;
+      min-height: 100vh;
+      padding-bottom: 105px;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     /* TOP HEADER */
-    .top-header {
+    .app-header {
       position: sticky;
       top: 0;
       z-index: 50;
       background: linear-gradient(135deg, #3b0764, #6d28d9);
       color: #ffffff;
       padding: 12px 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
     }
 
-    .header-row {
-      max-width: 900px;
+    .header-inner {
+      max-width: 920px;
       margin: 0 auto;
+    }
+
+    .header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .brand-box {
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .brand-name {
-      font-size: 20px;
+    .brand-title {
+      font-size: 19px;
       font-weight: 900;
-      letter-spacing: -0.3px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .fast-pill {
+    .zone-badge {
       background: #facc15;
       color: #1e1b4b;
       font-size: 10px;
@@ -71,109 +76,168 @@
       margin-top: 2px;
     }
 
-    .header-cart-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .search-box {
-      max-width: 900px;
-      margin: 10px auto 0 auto;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
+    .btn-install {
+      background: #10b981;
+      color: #ffffff;
       border: none;
-      font-size: 14px;
-      background: #ffffff;
-      color: #111827;
-      outline: none;
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    /* LOCATION VERIFICATION BAR */
-    .gps-banner {
-      background: #ffffff;
-      border-bottom: 2px solid #e5e7eb;
-      padding: 10px 14px;
+    .btn-cart-top {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 7px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    .gps-banner-inner {
-      max-width: 900px;
+    /* SAVED LOCATION BAR */
+    .saved-loc-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .saved-loc-inner {
+      max-width: 920px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .gps-status-left {
+    .loc-pill {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 13px;
+      gap: 6px;
       font-weight: 700;
-      flex: 1;
-      min-width: 200px;
+      color: #065f46;
     }
 
-    .status-dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: #f59e0b;
-    }
-    .status-dot.ok { background: #10b981; }
-    .status-dot.err { background: #ef4444; }
-
-    .btn-detect-gps {
-      background: #6d28d9;
-      color: #ffffff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 800;
+    .btn-recheck {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    /* MAIN WRAPPER */
-    .main-wrap {
-      max-width: 900px;
+    /* FULL SCREEN GATES (ASK LOCATION & NOT SERVICEABLE) */
+    .gate-wrap {
+      max-width: 440px;
+      margin: 36px auto;
+      padding: 0 16px;
+    }
+
+    .gate-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .gate-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      margin: 0 auto 14px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+    }
+
+    .gate-title {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .gate-desc {
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .btn-primary-lg {
+      width: 100%;
+      background: #6d28d9;
+      color: #ffffff;
+      border: none;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+    }
+
+    .btn-primary-lg:active {
+      transform: scale(0.98);
+    }
+
+    /* STOREFRONT MAIN */
+    .store-container {
+      max-width: 920px;
       margin: 0 auto;
       padding: 12px 14px;
     }
 
-    /* MIN ORDER BAR */
-    .mov-card {
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      background: #ffffff;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    /* MINIMUM ORDER BAR */
+    .mov-box {
       background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 12px;
+      padding: 11px 13px;
       margin-bottom: 12px;
     }
 
-    .mov-row {
+    .mov-top {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       margin-bottom: 6px;
     }
 
-    .mov-track {
+    .mov-bar-bg {
       width: 100%;
       height: 8px;
       background: #e5e7eb;
@@ -181,56 +245,56 @@
       overflow: hidden;
     }
 
-    .mov-fill {
+    .mov-bar-fill {
       height: 100%;
       width: 0%;
       background: #db2777;
-      transition: width 0.2s ease;
+      transition: width 0.25s ease;
     }
-    .mov-fill.done {
+
+    .mov-bar-fill.unlocked {
       background: #059669;
     }
 
-    /* CATEGORY TABS */
-    .cat-bar {
+    /* CATEGORIES */
+    .cat-scroll {
       display: flex;
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 8px;
       margin-bottom: 12px;
+      scrollbar-width: none;
     }
+    .cat-scroll::-webkit-scrollbar { display: none; }
 
-    .cat-pill {
+    .cat-chip {
       padding: 7px 14px;
       border-radius: 99px;
       border: 1px solid #d1d5db;
       background: #ffffff;
       color: #374151;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
     }
-    .cat-pill.active {
+
+    .cat-chip.active {
       background: #6d28d9;
       color: #ffffff;
       border-color: #6d28d9;
     }
 
     /* PRODUCT GRID */
-    .products-grid {
+    .prod-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
-    @media (min-width: 600px) {
-      .products-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (min-width: 820px) {
-      .products-grid { grid-template-columns: repeat(4, 1fr); }
-    }
+    @media (min-width: 600px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 840px) { .prod-grid { grid-template-columns: repeat(4, 1fr); } }
 
-    .p-card {
+    .prod-card {
       background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 14px;
@@ -239,10 +303,10 @@
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
 
-    .p-badge {
+    .off-ribbon {
       position: absolute;
       top: 8px;
       left: 8px;
@@ -255,9 +319,9 @@
       z-index: 2;
     }
 
-    .p-img-box {
+    .prod-thumb {
       width: 100%;
-      height: 110px;
+      height: 112px;
       background: #f8fafc;
       border-radius: 10px;
       display: flex;
@@ -265,19 +329,16 @@
       justify-content: center;
       overflow: hidden;
       margin-bottom: 8px;
+      font-size: 44px;
     }
 
-    .p-img-box img {
+    .prod-thumb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .p-emoji {
-      font-size: 44px;
-    }
-
-    .p-unit {
+    .prod-unit {
       font-size: 11px;
       font-weight: 700;
       color: #6b7280;
@@ -288,30 +349,29 @@
       margin-bottom: 4px;
     }
 
-    .p-title {
+    .prod-name {
       font-size: 13px;
       font-weight: 800;
       color: #111827;
-      margin-bottom: 6px;
       min-height: 34px;
+      margin-bottom: 6px;
     }
 
-    .p-footer {
+    .prod-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding-top: 6px;
       border-top: 1px dashed #e5e7eb;
-      margin-top: 4px;
     }
 
-    .p-price {
+    .price-now {
       font-size: 15px;
       font-weight: 900;
       color: #111827;
     }
 
-    .p-mrp {
+    .price-mrp {
       font-size: 11px;
       color: #9ca3af;
       text-decoration: line-through;
@@ -319,7 +379,7 @@
     }
 
     .btn-add {
-      background: #fff;
+      background: #ffffff;
       color: #db2777;
       border: 1.5px solid #db2777;
       padding: 6px 14px;
@@ -329,11 +389,11 @@
       cursor: pointer;
     }
 
-    .qty-ctrl {
+    .qty-box {
       display: flex;
       align-items: center;
       background: #db2777;
-      color: #fff;
+      color: #ffffff;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -341,7 +401,7 @@
     .qty-btn {
       background: transparent;
       border: none;
-      color: #fff;
+      color: #ffffff;
       width: 28px;
       height: 28px;
       font-size: 16px;
@@ -349,7 +409,7 @@
       cursor: pointer;
     }
 
-    .qty-val {
+    .qty-num {
       font-size: 12px;
       font-weight: 900;
       min-width: 20px;
@@ -365,19 +425,20 @@
       background: #ffffff;
       border-top: 1px solid #d1d5db;
       padding: 10px 14px;
-      z-index: 55;
-      box-shadow: 0 -4px 14px rgba(0,0,0,0.08);
+      z-index: 45;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
     }
 
     .bottom-inner {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
     }
 
-    .btn-open-checkout {
+    .btn-checkout-bar {
       background: #6d28d9;
       color: #ffffff;
       border: none;
@@ -388,8 +449,8 @@
       cursor: pointer;
     }
 
-    /* MODALS (CART, GPS POPUP, AND ISOLATED ADMIN) */
-    .overlay-modal {
+    /* MODALS */
+    .modal-overlay {
       position: fixed;
       inset: 0;
       background: rgba(17, 24, 39, 0.7);
@@ -399,34 +460,34 @@
       justify-content: center;
       padding: 12px;
     }
-    .overlay-modal.show {
+
+    .modal-overlay.open {
       display: flex;
     }
 
-    .modal-box {
+    .modal-card {
       background: #ffffff;
       width: 100%;
       max-width: 480px;
       max-height: 90vh;
-      border-radius: 16px;
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
-    .modal-head {
+    .modal-header {
       padding: 14px 16px;
       background: #f9fafb;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-weight: 900;
       font-size: 16px;
+      font-weight: 900;
     }
 
-    .modal-close {
+    .btn-close {
       background: #e5e7eb;
       border: none;
       width: 30px;
@@ -442,7 +503,7 @@
       flex: 1;
     }
 
-    .input-field {
+    .field-input {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #d1d5db;
@@ -451,39 +512,237 @@
       margin-bottom: 8px;
     }
 
-    .btn-wa-order {
+    .btn-whatsapp {
       width: 100%;
       padding: 14px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 900;
       cursor: pointer;
       margin-top: 10px;
     }
-    .btn-wa-order.ready {
+
+    .btn-whatsapp.ready {
       background: #16a34a;
       color: #ffffff;
     }
-    .btn-wa-order.locked {
+
+    .btn-whatsapp.locked {
       background: #e5e7eb;
       color: #6b7280;
       cursor: not-allowed;
     }
 
-    /* ISOLATED ADMIN TABLE */
-    .admin-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 8px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      margin-bottom: 6px;
+    /* SECRET URL ADMIN PANEL */
+    .admin-wrap {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 14px;
+    }
+
+    .admin-card {
+      background: #ffffff;
+      border: 2px solid #4c1d95;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .code-output {
+      width: 100%;
+      height: 220px;
+      font-family: monospace;
       font-size: 12px;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 8px;
     }
   </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       TOP HEADER (WITH INSTALL WEB APP BUTTON)
+       ========================================================= -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div>
+          <div class="brand-title">
+            <span id="uiHeaderTitle">Weaverly Express</span>
+            <span class="zone-badge" id="uiRadiusBadge">1.5 KM ZONE</span>
+          </div>
+          <div class="brand-sub" id="uiHeaderSub">Min Order ₹499 • Instant Local Delivery</div>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" class="btn-install" onclick="triggerInstallApp()">
+            📲 Download App
+          </button>
+          <button type="button" id="uiTopCartBtn" class="btn-cart-top hidden" onclick="openCartModal(true)">
+            <span>🛒</span>
+            <span id="uiTopCartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       VIEW 1: ASK USER LOCATION FIRST (IF NOT SAVED YET)
+       ========================================================= -->
+  <section id="viewLocationGate" class="gate-wrap hidden">
+    <div class="gate-card">
+      <div class="gate-icon" style="background: #f3e8ff; color: #6d28d9;">📍</div>
+      <h2 class="gate-title">Verify Your Delivery Location</h2>
+      <p class="gate-desc">
+        We deliver groceries & dry goods within a <strong><span id="uiGateRadius">1.5</span> km radius</strong> of our store (<span id="uiGateStoreAddr">Yamuna Vihar</span>).<br /><br />
+        Allow location once—we will save it on your phone so you don't have to verify again!
+      </p>
+      <button type="button" id="btnDetectLocation" class="btn-primary-lg" onclick="requestCustomerGps()">
+        📍 Allow GPS Location to View Products
+      </button>
+      <p id="uiLocGateStatus" style="margin-top: 12px; font-size: 12px; color: #d97706; font-weight: 700;"></p>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       VIEW 2: NOT SERVICEABLE SCREEN (IF DISTANCE > 1.5 KM)
+       ========================================================= -->
+  <section id="viewNotServiceable" class="gate-wrap hidden">
+    <div class="gate-card">
+      <div class="gate-icon" style="background: #fee2e2; color: #dc2626;">🚫</div>
+      <h2 class="gate-title">Location Not Serviceable</h2>
+      <p class="gate-desc">
+        Your current location is <strong><span id="uiOutsideDist">0.00</span> km</strong> away from our store hub (<span id="uiOutsideStoreAddr">Yamuna Vihar</span>).<br /><br />
+        We currently deliver strictly within a <strong><span id="uiOutsideMaxRadius">1.5</span> km radius</strong>.
+      </p>
+      <button type="button" class="btn-primary-lg" style="background: #374151;" onclick="requestCustomerGps()">
+        ↻ Re-check My GPS Location
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       VIEW 3: PRODUCT STOREFRONT (SHOWN ONLY WHEN WITHIN 1.5 KM)
+       ========================================================= -->
+  <section id="viewStorefront" class="hidden">
+    <!-- Saved Customer Location & Profile Banner -->
+    <div class="saved-loc-bar">
+      <div class="saved-loc-inner">
+        <div class="loc-pill">
+          <span>✅ Serviceable (<span id="uiSavedDist">0.00</span> km from shop)</span>
+          <span id="uiSavedUserBadge" style="color: #4b5563; font-weight: 600;"></span>
+        </div>
+        <button type="button" class="btn-recheck" onclick="requestCustomerGps()">Change GPS</button>
+      </div>
+    </div>
+
+    <div class="store-container">
+      <!-- Search Bar -->
+      <input
+        type="text"
+        id="inSearch"
+        class="search-input"
+        placeholder="Search rice, atta, dal, oil, spices, dry fruits..."
+        oninput="renderProductGrid()"
+      />
+
+      <!-- ₹499 Minimum Order Value Progress -->
+      <div class="mov-box">
+        <div class="mov-top">
+          <span id="uiMovText">Add ₹499 more for free delivery</span>
+          <span id="uiMovAmounts">₹0 / ₹499</span>
+        </div>
+        <div class="mov-bar-bg">
+          <div id="uiMovFill" class="mov-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Category Pills -->
+      <div id="uiCategoryBar" class="cat-scroll"></div>
+
+      <!-- Products Grid -->
+      <div id="uiProductGrid" class="prod-grid"></div>
+    </div>
+
+    <!-- Sticky Bottom Bar -->
+    <div class="bottom-bar">
+      <div class="bottom-inner">
+        <div>
+          <div style="font-size: 11px; color: #6b7280; font-weight: 800;" id="uiBottomCount">0 ITEMS IN CART</div>
+          <div style="font-size: 18px; font-weight: 900;" id="uiBottomTotal">₹0</div>
+        </div>
+        <button type="button" class="btn-checkout-bar" onclick="openCartModal(true)">
+          One-Tap Order →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       VIEW 4: URL-ACTIVATED ADMIN PANEL (?admin=weaverly)
+       ========================================================= -->
+  <section id="viewAdminPanel" class="admin-wrap hidden">
+    <div class="admin-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 style="font-size: 18px; font-weight: 900; color: #4c1d95;">⚙️ Weaverly Admin & GitHub Code Generator</h2>
+        <a href="?" style="font-size: 12px; font-weight: 800; color: #db2777;">Exit Admin →</a>
+      </div>
+      <p style="font-size: 12px; color: #4b5563; margin-bottom: 14px;">
+        Edit your store details or add products below. Then copy the generated code block at the bottom and paste it into your GitHub <code>index.html</code> file!
+      </p>
+
+      <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 8px;">1. Store Location & WhatsApp Settings</h3>
+      <label style="font-size:11px; font-weight:700;">Store Name</label>
+      <input type="text" id="admName" class="field-input" oninput="syncAdminForm()" />
+
+      <label style="font-size:11px; font-weight:700;">Store WhatsApp Number (91 + 10-digit mobile number, no + sign)</label>
+      <input type="text" id="admPhone" class="field-input" oninput="syncAdminForm()" />
+
+      <div style="display:flex; gap:8px;">
+        <div style="flex:1;">
+          <label style="font-size:11px; font-weight:700;">Shop Latitude</label>
+          <input type="number" step="any" id="admLat" class="field-input" oninput="syncAdminForm()" />
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:11px; font-weight:700;">Shop Longitude</label>
+          <input type="number" step="any" id="admLng" class="field-input" oninput="syncAdminForm()" />
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onclick="captureShopGpsForAdmin()"
+        style="width:100%; background:#059669; color:#fff; border:none; padding:10px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:10px;"
+      >
+        📍 Set My Current Phone GPS as Shop Location
+      </button>
+
+      <div style="display:flex; gap:8px;">
+        <div style="flex:1;">
+          <label style="font-size:11px; font-weight:700;">Delivery Radius (km)</label>
+          <input type="number" step="0.1" id="admRadius" class="field-input" oninput="syncAdminForm()" />
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:11px; font-weight:700;">Min Order Value (₹)</label>
+          <input type="number" id="admMinOrder" class="field-input" oninput="syncAdminForm()" />
+        </div>
+      </div>
+
+      <label style="font-size:11px; font-weight:700;">Shop Display Address</label>
+      <input type="text" id="admAddr" class="field-input" oninput="syncAdminForm()" />
+
+      <hr style="margin: 16px 0; border: none; border-top: 1px solid #e5e7eb;" />
+
+      <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 8px;">2. Add New Product</h3>
+      <div style="background:#f9fafb; padding:12px; border-radius:10px; border:1px solid #e5e7eb; margin-bottom:14px;">
+        <input type="text" id="admNewName" class="field-input" placeholder="Product Name (e.g. Fortune Chana Besan)" />
+        <div style="display:flex; gap:8px;"  </style>
 </head>
 <body>
 
